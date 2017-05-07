@@ -1,0 +1,47 @@
+[user]
+    name = Vincent Tee
+    email = vincenttky@gmail.com
+[alias]
+    # Show last commit
+    last = log --decorate --stat -p -1 -U5
+
+    # Show commits in one line
+    logshort = log --oneline --decorate
+
+    # Show logs with stats
+    logstat = log --decorate --stat
+
+    # Show logs in pretty graph
+    loggraph = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+
+    # Count of commits grouped by committers
+    commitcount = shortlog -s -n
+
+    # Prune deletes any local branch which has been deleted from the remote
+    prune = fetch --prune
+
+    # Stash all files including untracked files
+    stash-all = stash save --include-untracked
+
+    # Remove merged branch
+    delete-merged-branches = "branch --merged | egrep -v '(^\\*|master|dev|wip)' | xargs git branch -d"
+[color]
+    branch = auto
+    diff = auto
+    grep = auto
+    status = auto
+[color "diff-highlight"]
+    newHighlight = green bold 22
+    newNormal = green bold
+    oldHighlight = red bold 52
+    oldNormal = red bold
+[interactive]
+    singlekey = true
+[pager]
+    diff = diff-so-fancy | less --tabs=4 -RFX
+[push]
+    default = simple
+[status]
+    showUntrackedFiles = normal
+[http "https://gopkg.in"]
+    followRedirects = true
