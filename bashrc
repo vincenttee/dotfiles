@@ -25,6 +25,7 @@ export PATH=$GOPATH/bin:$PATH
 
 # Alias
 alias ls="ls -G"
+alias lsp="ls -lhtrF"
 
 # Bash completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
