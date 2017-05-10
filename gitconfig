@@ -1,6 +1,7 @@
 [user]
     name = Vincent Tee
     email = vincenttky@gmail.com
+    signingkey = 9AE6834DFC705799
 [alias]
     # Show last commit
     last = log --stat -p -1 -U5
