@@ -3,13 +3,13 @@
     email = vincenttky@gmail.com
 [alias]
     # Show last commit
-    last = log --decorate --stat -p -1 -U5
+    last = log --stat -p -1 -U5
 
     # Show commits in one line
-    logshort = log --oneline --decorate
+    logshort = log --oneline
 
     # Show logs with stats
-    logstat = log --decorate --stat
+    logstat = log --stat
 
     # Show logs in pretty graph
     loggraph = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
