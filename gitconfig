@@ -17,11 +17,11 @@
     # Show logs in pretty graph
     loggraph = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
 
-    # Count of commits grouped by committers
-    commitcount = shortlog -s -n
-
     # Prune deletes any local branch which has been deleted from the remote
     prune = fetch --prune
+
+    # Count of commits grouped by committers
+    stats = shortlog -sn
 
     # Stash all files including untracked files
     stash-all = stash save --include-untracked
