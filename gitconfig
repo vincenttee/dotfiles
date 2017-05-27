@@ -23,6 +23,9 @@
     # Count of commits grouped by committers
     stats = shortlog -sn
 
+    # Show recent active branches
+    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+
     # Stash all files including untracked files
     stash-all = stash save --include-untracked
 
