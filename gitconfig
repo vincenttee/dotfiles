@@ -31,6 +31,9 @@
 
     # Remove merged branch
     delete-merged-branches = "!git branch --merged | egrep -v '(^\\*|master|dev|wip)' | xargs git branch -d"
+
+    # Commit 'WIP'
+    wip = commit -m "WIP"
 [color]
     branch = auto
     diff = auto
