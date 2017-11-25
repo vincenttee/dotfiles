@@ -16,6 +16,7 @@ set ruler               " show the line and column number of the cursor position
 set showcmd             " show command in bottom bar
 set showmatch           " highlight matching [{()}]
 set wildmenu            " visual autocomplete for command menu
+set backspace=indent,eol,start " fix backspace not working
 
 " allows cursor change in tmux mode
 if exists('$TMUX')
