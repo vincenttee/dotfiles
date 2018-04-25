@@ -7,6 +7,9 @@
 [core]
     pager = diff-so-fancy | less --tabs=4 -RFX
 [alias]
+    # The "I can never remember that alias I set" Trick
+    aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /' | sort
+
     # Show last commit
     last = log --stat -p -1 -U5
 
