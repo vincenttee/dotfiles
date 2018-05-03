@@ -1,0 +1,44 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+	{
+		"key": "ctrl+cmd+g",
+		"command": "editor.action.selectHighlights",
+		"when": "editorFocus"
+	},
+	{
+		"key": "shift+cmd+l",
+		"command": "-editor.action.selectHighlights",
+		"when": "editorFocus"
+	},
+	{
+		"key": "shift+cmd+l",
+		"command": "editor.action.insertCursorAtEndOfEachLineSelected",
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "shift+alt+i",
+		"command": "-editor.action.insertCursorAtEndOfEachLineSelected",
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "cmd+k cmd+l",
+		"command": "editor.action.transformToLowercase"
+	},
+	{
+		"key": "cmd+k cmd+u",
+		"command": "editor.action.transformToUppercase"
+	},
+	{
+		"key": "ctrl+shift+m",
+		"command": "expand-selection-to-scope.expand"
+	},
+	{
+		"key": "shift+cmd+c",
+		"command": "-workbench.action.terminal.openNativeConsole",
+		"when": "!terminalFocus"
+	},
+	{
+		"key": "cmd+k cmd+z",
+		"command": "workbench.action.toggleMaximizedPanel"
+	}
+]
