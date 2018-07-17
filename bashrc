@@ -26,6 +26,7 @@ export PATH=$GOPATH/bin:$PATH
 # Alias
 alias ls="ls -G"
 alias lsp="ls -lhtrF"
+alias did="vim +'r!date' ~/did.txt"
 
 # Bash completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
