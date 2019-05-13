@@ -1,7 +1,7 @@
 [user]
     name = Vincent Tee
     email = vincenttky@gmail.com
-    signingkey = 9AE6834DFC705799
+    signingkey = 53B1CBEF76E471F88926DBE69F332024C5A6FD55
 [commit]
     gpgsign = true
 [core]
