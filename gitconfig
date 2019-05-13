@@ -14,10 +14,11 @@
     last = log --stat -p -1 -U5
 
     # Show commits in one line
-    logshort = log --oneline --all --decorate
+    logone = log --oneline --all --decorate
 
     # Show logs with stats
     logstat = log --stat --all --decorate
+    logstats = log --graph --oneline --stat --pickaxe-all
 
     # Show logs in pretty graph
     loggraph = log --graph --all --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
