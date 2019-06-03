@@ -27,6 +27,11 @@ export PATH=$GOPATH/bin:$PATH
 alias ls="ls -G"
 alias lsp="ls -lhtrF"
 
+# Functions
+dedupeFile() {
+  awk '!visited[$0]++' $1 > $2;
+};
+
 # Bash completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
