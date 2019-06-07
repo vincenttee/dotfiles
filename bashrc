@@ -6,6 +6,15 @@ export PAGER="less -x4"
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export TERM=screen-256color
 
+# History
+shopt -s histappend
+shopt -s cmdhist
+export HISTFILESIZE=5000
+export HISTSIZE=5000
+export HISTCONTROL=ignoreboth
+export HISTTIMEFORMAT='%F %T '
+export PROMPT_COMMAND='history -a'
+
 # Development
 . ~/.developmentrc
 
