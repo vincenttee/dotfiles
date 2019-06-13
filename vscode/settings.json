@@ -1,27 +1,31 @@
 // Place your settings in this file to overwrite the default settings
 {
+	"[json]": {},
+	"breadcrumbs.enabled": true,
 	"editor.fontSize": 14,
 	"editor.insertSpaces": true,
-	"files.insertFinalNewline": true,
-	"files.trimTrailingWhitespace": true,
-	"go.useCodeSnippetsOnFunctionSuggest": true,
-	"vim.easymotion": true,
-	"workbench.activityBar.visible": true,
-	"window.zoomLevel": 0,
-	"workbench.statusBar.visible": true,
-	"editor.tabSize": 2,
-	"editor.wordWrap": false,
-	"workbench.iconTheme": "vs-seti",
-	"extensions.autoUpdate": true,
-	"window.newWindowDimensions": "inherit",
-	"files.associations": {
-		"bashrc": "shellscript"
-	},
 	"editor.renderWhitespace": "all",
+	"editor.tabSize": 2,
+	"editor.wordWrap": "off",
 	"emmet.syntaxProfiles": {
 		".vue": "html"
 	},
-	"workbench.colorTheme": "One Dark Pro",
-	"go.testTimeout": "2m"
+	"extensions.autoUpdate": true,
+	"files.associations": {
+		"bashrc": "shellscript"
+	},
+	"files.insertFinalNewline": true,
+	"files.trimTrailingWhitespace": true,
+	"go.testTimeout": "2m",
+	"go.useCodeSnippetsOnFunctionSuggest": true,
+	"go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
+	"go.useLanguageServer": true,
+	"window.newWindowDimensions": "inherit",
+	"window.zoomLevel": 0,
+	"workbench.activityBar.visible": true,
+	"workbench.colorTheme": "Monokai Pro",
+	"workbench.iconTheme": "Monokai Pro Icons",
+	"workbench.statusBar.visible": true
+	// "vim.easymotion": true,
 }
 
