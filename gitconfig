@@ -36,7 +36,7 @@
     stash-all = stash save --include-untracked
 
     # Remove merged branch
-    delete-merged-branches = "!git branch --merged | egrep -v '(^\\*|master|dev|wip)' | xargs git branch -d"
+    delete-merged-branches = "!git branch --merged | egrep -v '(^\\*|master|staging|dev|wip)' | xargs git branch -d"
 
     # Commit 'WIP'
     wip = commit -m "WIP"
