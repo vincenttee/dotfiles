@@ -35,8 +35,11 @@
     # Stash all files including untracked files
     stash-all = stash save --include-untracked
 
-    # Remove merged branch
+    # Remove local merged branch
     delete-merged-branches = "!git branch --merged | egrep -v '(^\\*|master|staging|dev|wip)' | xargs git branch -d"
+
+    # Remove remote merged branch
+    delete-remote-merged-branches = "!git push origin --delete $(git branch -r --merged origin/master | grep origin | egrep -v '>|master|staging|dev|wip' | cut -d/ -f2-)"
 
     # Commit 'WIP'
     wip = commit -m "WIP"
