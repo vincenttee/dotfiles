@@ -35,6 +35,8 @@ export PATH=$GOPATH/bin:$PATH
 # Alias
 alias ls="ls -G"
 alias lsp="ls -lhtrF"
+alias python=/usr/local/bin/python3
+alias pip=/usr/local/bin/pip3
 
 # Functions
 dedupeFile() {
