@@ -19,7 +19,12 @@ export PROMPT_COMMAND='history -a'
 . ~/.developmentrc
 
 # FZF
-export FZF_DEFAULT_OPTS='--height 40% --border'
+export FZF_DEFAULT_OPTS='--height 40% --border
+--color=fg:#e5dbc4,bg:-1,hl:#d69e49
+--color=fg+:#b8af9a,bg+:#262626,hl+:#f0a327
+--color=info:#b5a172,prompt:#ffa727,pointer:#ffa727
+--color=marker:#cc4b5f,spinner:#d18822,header:#cc4b5f'
+# https://minsw.github.io/fzf-color-picker/
 
 # Git
 export GIT_EDITOR=vim
