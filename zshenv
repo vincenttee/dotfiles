@@ -10,6 +10,7 @@ export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export TERM=screen-256color
 
 # History
+export HISTFILE=~/.zsh_history
 export HISTFILESIZE=5000
 export HISTSIZE=5000
 export HISTCONTROL=ignoreboth
