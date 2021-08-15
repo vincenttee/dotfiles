@@ -1,3 +1,5 @@
+setopt NONOMATCH
+
 # Alias
 alias ls="ls -G"
 alias lsp="ls -lhtrF"
