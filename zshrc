@@ -84,3 +84,9 @@ eval "$(direnv hook zsh)"
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Prompt
+# https://github.com/git/git/blob/master/contrib/completion/git-completion.bash
+source ~/.git-prompt.sh
+setopt PROMPT_SUBST
+export PS1='%c$(__git_ps1 " [%s]") $ '

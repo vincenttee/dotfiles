@@ -21,7 +21,7 @@ export GIT_EDITOR=vim
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_SHOWUPSTREAM="auto"
-export PS1='\W$(__git_ps1 " [%s]") $ '
+export GIT_PS1_SHOWCOLORHINTS=
 
 # Go
 export GOPATH=/Users/$USER/go
