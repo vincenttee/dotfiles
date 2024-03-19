@@ -95,6 +95,10 @@ eval "$(direnv hook zsh)"
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# FZF-git
+# https://github.com/junegunn/fzf-git.sh
+source ~/fzf-git.sh
+
 # Prompt
 # https://github.com/git/git/blob/master/contrib/completion/git-completion.bash
 source ~/.git-prompt.sh
