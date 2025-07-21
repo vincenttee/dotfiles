@@ -8,9 +8,10 @@ bindkey "^[[1;9C" end-of-line       # cmd+→
 
 # Alias
 alias ls="ls -G"
-alias lsp="ls -lhtrF"
+alias lsp="ls -lhtF"
 alias python=/usr/local/bin/python3
 alias pip=/usr/local/bin/pip3
+alias cht.sh=~/bin/cht.sh
 
 # Functions
 dedupeFile() {
