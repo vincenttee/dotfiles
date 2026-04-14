@@ -50,11 +50,19 @@ endif
 
 
 " Plugins
-"call plug#begin('~/.vim/plugged')
+call plug#begin('~/.vim/plugged')
 
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 "Plug 'fatih/vim-go'
 "Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
-"call plug#end() " initialize plugin system
+call plug#end() " initialize plugin system
+
+" FZF Mappings
+nnoremap <C-p> :Files<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>h :History<CR>
+nnoremap <leader>f :Rg<Space>
+
 

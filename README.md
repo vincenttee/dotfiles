@@ -4,7 +4,7 @@ My personal collection of configuration files for macOS.
 
 ## 🧰 Included Configurations
 
-- **Vim (`vimrc`)**: Persistent undo, line manipulation, and formatting.
+- **Vim (`vimrc`)**: Persistent undo, fzf fuzzy finding, and line manipulation.
 - **Zsh (`zshrc`, `zshenv`)**: Shell aliases and environment settings.
 - **Git (`gitconfig`)**: Global defaults and exclusions.
 - **Tmux (`tmux.conf`)**: Terminal multiplexing.
@@ -32,6 +32,10 @@ Use these commands to link the configuration files to your home directory:
 # Vim
 ln -sf ~/dotfiles/vimrc ~/.vimrc
 mkdir -p ~/.vim/undodir
+
+# Install vim-plug and plugins
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim +PlugInstall +qall
 
 # Zsh
 ln -sf ~/dotfiles/zshrc ~/.zshrc

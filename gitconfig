@@ -51,7 +51,6 @@
     # Show commit count summary by author
     stats = shortlog -sn
 
-
 [color]
     branch = auto
     diff = auto
