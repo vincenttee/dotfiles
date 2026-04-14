@@ -17,6 +17,24 @@ set showcmd             " show command in bottom bar
 set showmatch           " highlight matching [{()}]
 set wildmenu            " visual autocomplete for command menu
 set backspace=indent,eol,start " fix backspace not working
+set clipboard=unnamed
+
+" Indentation
+set expandtab       " Use spaces instead of tabs
+set shiftwidth=4    " Number of spaces for auto-indent
+set tabstop=4       " Number of spaces a tab counts for
+set autoindent      " Copy indent from current line when starting a new one
+
+" Search
+set hlsearch            " highlight matches
+set incsearch           " search as characters are entered
+set ignorecase          " ignore case when searching
+set smartcase           " ...unless the query contains an upper case letter
+
+" Workflow & Integrity
+set hidden              " switch buffers without saving
+set undofile            " maintain undo history between sessions
+set undodir=~/.vim/undodir " ensure this directory exists
 
 " allows cursor change in tmux mode
 if exists('$TMUX')
@@ -36,3 +54,4 @@ endif
 "Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
 "call plug#end() " initialize plugin system
+
