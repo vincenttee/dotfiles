@@ -92,6 +92,19 @@ fi
 # fzf-git.sh (https://github.com/junegunn/fzf-git.sh)
 [ -f ~/fzf-git.sh ] && source ~/fzf-git.sh
 
+# FZF Options
+export FZF_DEFAULT_OPTS='--height 40% --border
+--color=fg:#e5dbc4,bg:-1,hl:#d69e49
+--color=fg+:#b8af9a,bg+:#262626,hl+:#f0a327
+--color=info:#b5a172,prompt:#ffa727,pointer:#ffa727
+--color=marker:#cc4b5f,spinner:#d18822,header:#cc4b5f'
+
+# Git Prompt Options
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWUPSTREAM="auto"
+export GIT_PS1_SHOWCOLORHINTS=
+
 # Git Prompt
 [ -f ~/.git-prompt.sh ] && source ~/.git-prompt.sh
 export PS1='%c$(__git_ps1 " [%s]") $ '
