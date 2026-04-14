@@ -52,6 +52,11 @@ dedupeFile() {
 # =============================================================================
 # Completions
 # =============================================================================
+# Tab Completion Enhancements
+zstyle ':completion:*' matcher-list 'm:{a-z1-9}={A-Z1-9}' # case-insensitive completion
+zstyle ':completion:*' menu select                        # arrow keys to select from menu
+zstyle ':completion:*:default' list-colors ''             # use terminal colors in menu
+
 # Add Homebrew completions to FPATH
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
