@@ -6,7 +6,7 @@ My personal collection of configuration files for macOS.
 
 - **Vim (`vimrc`)**: Persistent undo, line manipulation, and formatting.
 - **Zsh (`zshrc`, `zshenv`)**: Shell aliases and environment settings.
-- **Git (`gitconfig`, `gitignore`)**: Global defaults and exclusions.
+- **Git (`gitconfig`)**: Global defaults and exclusions.
 - **Tmux (`tmux.conf`)**: Terminal multiplexing.
 - **Homebrew (`Brewfile`)**: macOS apps and CLI tools.
 - **VS Code (`vscode/`)**: Keybindings and settings.
@@ -39,7 +39,6 @@ ln -sf ~/dotfiles/zshenv ~/.zshenv
 
 # Git
 ln -sf ~/dotfiles/gitconfig ~/.gitconfig
-ln -sf ~/dotfiles/gitignore ~/.gitignore
 
 # Tmux
 ln -sf ~/dotfiles/tmux.conf ~/.tmux.conf

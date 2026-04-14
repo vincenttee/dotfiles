@@ -1,49 +1,57 @@
 [user]
-    name = Vincent Tee
-    email = vincenttky@gmail.com
-    signingkey = 53B1CBEF76E471F88926DBE69F332024C5A6FD55
+    name = YOUR_NAME
+    email = YOUR_EMAIL
+    signingkey = YOUR_GPG_KEY_ID
 [commit]
     gpgsign = true
 [core]
     pager = diff-so-fancy | less --tabs=4 -RFX
-    excludesfile = /Users/vincent/.gitignore_global
+    excludesfile = ~/.gitignore_global
+[init]
+    defaultBranch = main
+[fetch]
+    prune = true
 [alias]
-    # The "I can never remember that alias I set" Trick
+    # List all available aliases
     aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /' | sort
 
-    # Show last commit
+    # View the last commit with diff and stats
     last = log --stat -p -1 -U5
 
-    # Show commits in one line
-    logone = log --oneline --all --decorate
+    # Commit as Work-In-Progress
+    wip = commit -m "WIP"
 
-    # Show logs with stats
-    logstat = log --stat --all --decorate
-    logstats = log --graph --oneline --stat --pickaxe-all
-
-    # Show logs in pretty graph
-    loggraph = log --graph --all --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
-
-    # Prune deletes any local branch which has been deleted from the remote
+    # Fetch and prune deleted remote branches
     prune = fetch --prune -v
 
-    # Count of commits grouped by committers
-    stats = shortlog -sn
-
-    # Show recent active branches
-    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
-
-    # Stash all files including untracked files
+    # Stash all changes including untracked files
     stash-all = stash save --include-untracked
 
-    # Remove local merged branch
-    delete-merged-branches = "!git branch --merged | egrep -v '(^\\*|master|staging|demo|dev|wip)' | xargs git branch -d"
+    # One-line log of all branches
+    logone = log --oneline --all --decorate
 
-    # Remove remote merged branch
-    delete-remote-merged-branches = "!git push origin --delete $(git branch -r --merged origin/master | grep origin | egrep -v '>|master|staging|demo|dev|wip' | cut -d/ -f2-)"
+    # Detailed log with stats
+    logstat = log --stat --all --decorate
 
-    # Commit 'WIP'
-    wip = commit -m "WIP"
+    # Graph log with stats and pickaxe
+    logstats = log --graph --oneline --stat --pickaxe-all
+
+    # Pretty graph log with colors and author
+    loggraph = log --graph --all --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+
+    # List the 10 most recently modified branches
+    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+
+    # Delete local branches that have been merged into main
+    delete-merged-branches = "!git branch --merged | egrep -v '(^\\*|master|main|staging|demo|dev|wip)' | xargs git branch -d"
+
+    # Delete remote branches that have been merged into origin/main
+    delete-remote-merged-branches = "!git push origin --delete $(git branch -r --merged origin/main | grep origin | egrep -v '>|master|main|staging|demo|dev|wip' | cut -d/ -f2-)"
+
+    # Show commit count summary by author
+    stats = shortlog -sn
+
+
 [color]
     branch = auto
     diff = auto
@@ -62,3 +70,6 @@
     showUntrackedFiles = normal
 [http "https://gopkg.in"]
     followRedirects = true
+
+[includeIf "gitdir:~/PATH/TO/WORK/REPOS/"]
+    path = ~/PATH/TO/WORK/.gitconfig
