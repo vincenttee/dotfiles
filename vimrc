@@ -2,39 +2,32 @@ syntax on
 filetype indent on
 filetype plugin indent on
 
-set cursorline          " highlight current line
-set foldenable          " enable folding
-set foldlevelstart=10   " open most folds by default
-set foldmethod=indent   " fold based on indent level
-set foldnestmax=10      " 10 nested fold max
-set hlsearch            " highlight matches
-set incsearch           " search as characters are entered
-set laststatus=2        " always show statusline
-set lazyredraw          " redraw only when we need to
-set number              " show line numbers
-set ruler               " show the line and column number of the cursor position
-set showcmd             " show command in bottom bar
-set showmatch           " highlight matching [{()}]
-set wildmenu            " visual autocomplete for command menu
-set backspace=indent,eol,start " fix backspace not working
-set clipboard=unnamed
-
-" Indentation
-set expandtab       " Use spaces instead of tabs
-set shiftwidth=4    " Number of spaces for auto-indent
-set tabstop=4       " Number of spaces a tab counts for
-set autoindent      " Copy indent from current line when starting a new one
-
-" Search
-set hlsearch            " highlight matches
-set incsearch           " search as characters are entered
-set ignorecase          " ignore case when searching
-set smartcase           " ...unless the query contains an upper case letter
-
-" Workflow & Integrity
-set hidden              " switch buffers without saving
-set undofile            " maintain undo history between sessions
-set undodir=~/.vim/undodir " ensure this directory exists
+set autoindent                  " copy indent from current line
+set backspace=indent,eol,start  " fix backspace behavior
+set clipboard=unnamed           " use system clipboard
+set cursorline                  " highlight current line
+set encoding=utf-8              " use utf-8 encoding
+set expandtab                   " use spaces instead of tabs
+set foldenable                  " enable folding
+set foldlevelstart=10           " open most folds by default
+set foldmethod=indent           " fold based on indent level
+set foldnestmax=10              " 10 nested fold max
+set hidden                      " allow switching buffers without saving
+set hlsearch                    " highlight matches
+set ignorecase                  " ignore case when searching
+set incsearch                   " search as characters are entered
+set laststatus=2                " always show statusline
+set lazyredraw                  " redraw only when we need to
+set number                      " show line numbers
+set ruler                       " show the line and column number
+set shiftwidth=4                " number of spaces for auto-indent
+set showcmd                     " show command in bottom bar
+set showmatch                   " highlight matching [{()}]
+set smartcase                   " case-sensitive if query has caps
+set tabstop=4                   " number of spaces a tab counts for
+set undodir=~/.vim/undodir      " directory for undo files
+set undofile                    " maintain undo history between sessions
+set wildmenu                    " visual autocomplete for command menu
 
 " allows cursor change in tmux mode
 if exists('$TMUX')
