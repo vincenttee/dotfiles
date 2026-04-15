@@ -59,6 +59,19 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 " Multi-cursor: Press 'C' in Visual Mode to add cursors to all selected lines
 let g:VM_maps = {}
 let g:VM_maps['Visual Cursors'] = 'C'
+let g:VM_maps['Indent']         = '<Tab>'
+let g:VM_maps['Outdent']        = '<S-Tab>'
+
+" Allow Tab and Shift-Tab to indent/outdent in Visual Mode
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
+
+" Standard Vim mappings for Tab/Shift-Tab in Normal mode
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+
+" Allow Shift-Tab to outdent in Insert Mode
+inoremap <S-Tab> <C-d>
 
 "Plug 'fatih/vim-go'
 "Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
