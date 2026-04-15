@@ -54,6 +54,12 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
+" Multi-cursor: Press 'C' in Visual Mode to add cursors to all selected lines
+let g:VM_maps = {}
+let g:VM_maps['Visual Cursors'] = 'C'
+
 "Plug 'fatih/vim-go'
 "Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
