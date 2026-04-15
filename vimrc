@@ -24,6 +24,7 @@ set shiftwidth=4                " number of spaces for auto-indent
 set showcmd                     " show command in bottom bar
 set showmatch                   " highlight matching [{()}]
 set smartcase                   " case-sensitive if query has caps
+set statusline=%f\ %y\ %m\ %r\ %=%l/%L\ (%p%%)\ %c " custom status bar
 set tabstop=4                   " number of spaces a tab counts for
 set undodir=~/.vim/undodir      " directory for undo files
 set undofile                    " maintain undo history between sessions
