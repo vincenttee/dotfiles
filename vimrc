@@ -19,6 +19,7 @@ set incsearch                   " search as characters are entered
 set laststatus=2                " always show statusline
 set lazyredraw                  " redraw only when we need to
 set number                      " show line numbers
+set scrolloff=8                 " keep 8 lines of padding when scrolling
 set ruler                       " show the line and column number
 set shiftwidth=2                " number of spaces for auto-indent
 set showcmd                     " show command in bottom bar
@@ -30,6 +31,12 @@ set undodir=~/.vim/undodir      " directory for undo files
 set undofile                    " maintain undo history between sessions
 set ttimeoutlen=50              " faster key sequence timeout
 set wildmenu                    " visual autocomplete for command menu
+set termguicolors               " enable true colors support
+
+" Theme Configuration
+set background=dark
+let g:gruvbox_italic=1
+let g:tokyonight_style = 'night' " options: night, storm
 
 " move lines up/down with Option+j/k (macOS direct mappings)
 nnoremap ∆ :m .+1<CR>==
@@ -56,6 +63,10 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
+" Themes
+Plug 'morhetz/gruvbox'
+Plug 'ghifarit53/tokyonight-vim'
+
 " Multi-cursor: Press 'C' in Visual Mode to add cursors to all selected lines
 let g:VM_maps = {}
 let g:VM_maps['Visual Cursors'] = 'C'
@@ -77,6 +88,8 @@ inoremap <S-Tab> <C-d>
 "Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
 call plug#end() " initialize plugin system
+
+colorscheme gruvbox
 
 " FZF Mappings
 nnoremap <C-p> :Files<CR>
