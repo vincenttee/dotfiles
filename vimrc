@@ -20,12 +20,12 @@ set laststatus=2                " always show statusline
 set lazyredraw                  " redraw only when we need to
 set number                      " show line numbers
 set ruler                       " show the line and column number
-set shiftwidth=4                " number of spaces for auto-indent
+set shiftwidth=2                " number of spaces for auto-indent
 set showcmd                     " show command in bottom bar
 set showmatch                   " highlight matching [{()}]
 set smartcase                   " case-sensitive if query has caps
 set statusline=%f\ %y\ %m\ %r\ %=%l/%L\ (%p%%)\ %c " custom status bar
-set tabstop=4                   " number of spaces a tab counts for
+set tabstop=2                   " number of spaces a tab counts for
 set undodir=~/.vim/undodir      " directory for undo files
 set undofile                    " maintain undo history between sessions
 set ttimeoutlen=50              " faster key sequence timeout
@@ -83,5 +83,9 @@ nnoremap <C-p> :Files<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>h :History<CR>
 nnoremap <leader>f :Rg<Space>
+
+" Formatting: Define :Format and allow lowercase :format via abbreviation
+command! Format normal! gg=G``
+cabbrev format Format
 
 
