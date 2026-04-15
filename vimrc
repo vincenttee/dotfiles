@@ -27,17 +27,16 @@ set smartcase                   " case-sensitive if query has caps
 set tabstop=4                   " number of spaces a tab counts for
 set undodir=~/.vim/undodir      " directory for undo files
 set undofile                    " maintain undo history between sessions
+set ttimeoutlen=50              " faster key sequence timeout
 set wildmenu                    " visual autocomplete for command menu
 
-" move lines up/down with Option+j/k
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-
-inoremap <A-j> <Esc>:m .+1<CR>==gi
-inoremap <A-k> <Esc>:m .-2<CR>==gi
-
-vnoremap <A-j> :m '>+1<CR>gv=gv
-vnoremap <A-k> :m '<-2<CR>gv=gv
+" move lines up/down with Option+j/k (macOS direct mappings)
+nnoremap ∆ :m .+1<CR>==
+nnoremap ˚ :m .-2<CR>==
+inoremap ∆ <Esc>:m .+1<CR>==gi
+inoremap ˚ <Esc>:m .-2<CR>==gi
+vnoremap ∆ :m '>+1<CR>gv=gv
+vnoremap ˚ :m '<-2<CR>gv=gv
 
 " allows cursor change in tmux mode
 if exists('$TMUX')
