@@ -84,10 +84,54 @@ nnoremap <S-Tab> <<
 " Allow Shift-Tab to outdent in Insert Mode
 inoremap <S-Tab> <C-d>
 
-"Plug 'fatih/vim-go'
-"Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+Plug 'fatih/vim-go', { 'for': 'go' }
 
 call plug#end() " initialize plugin system
+
+" vim-go configuration
+let g:go_def_mode='gopls'          " Use gopls for definition jumps
+let g:go_info_mode='gopls'         " Use gopls for hover/info
+let g:go_fmt_command = "goimports" " Auto-format and fix imports on save
+let g:go_auto_type_info = 1        " Show type info in status line automatically
+let g:go_diagnostics_enabled = 0   " Disable integrated linter (gopls does this better)
+
+" Syntax Highlighting
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+
+" Essential Mappings for Go
+autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>b <Plug>(go-build)
+autocmd FileType go nmap <leader>c :GoReferrers<CR>
+autocmd FileType go nmap <leader>a <Plug>(go-alternate) " Toggle between file.go and file_test.go
+
+" FZF + Go Symbols
+let g:go_decls_mode = 'fzf'
+let g:fzf_layout = { 'down': '~40%' } " Avoid popup window to fix E863 error
+
+autocmd FileType go nmap <leader>s :GoDecls<CR>
+autocmd FileType go nmap <leader>S :GoDeclsDir<CR>
+
+" UI & Performance
+let g:go_list_type = "quickfix"    " Use quickfix for all error lists
+let g:go_echo_command_info = 1    " Echo progress in the command line
+let g:go_gopls_enabled = 1        " Ensure gopls is the backend
+
+" Quickfix Navigation Mappings
+nnoremap <leader>n :cnext<CR>
+nnoremap <leader>p :cprev<CR>
+nnoremap <leader>q :cclose<CR>
+
+" Buffer Navigation (Cycle through open files)
+nnoremap [b :bprevious<CR>
+nnoremap ]b :bnext<CR>
+nnoremap <leader><leader> <C-^> " Double-leader to toggle between last two files
+
 
 colorscheme gruvbox
 
