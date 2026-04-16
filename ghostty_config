@@ -1,0 +1,9 @@
+theme = Xcode Dark
+
+# Enable Option key as Alt/Meta for Vim/Tmux
+macos-option-as-alt = true
+
+# Send escape sequences for tmux to pick up
+# (Defining these overrides the default tab navigation automatically)
+keybind = cmd+shift+[=text:\x1b{
+keybind = cmd+shift+]=text:\x1b}
