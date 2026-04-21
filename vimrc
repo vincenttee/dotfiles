@@ -38,13 +38,20 @@ set background=dark
 let g:gruvbox_italic=1
 let g:tokyonight_style = 'night' " options: night, storm
 
-" move lines up/down with Option+j/k (macOS direct mappings)
-nnoremap ∆ :m .+1<CR>==
-nnoremap ˚ :m .-2<CR>==
-inoremap ∆ <Esc>:m .+1<CR>==gi
-inoremap ˚ <Esc>:m .-2<CR>==gi
-vnoremap ∆ :m '>+1<CR>gv=gv
-vnoremap ˚ :m '<-2<CR>gv=gv
+" move lines up/down with Alt/Option + j/k
+" Note: Ghostty macos-option-as-alt = true sends Esc+j/k
+" Standard Vim needs explicit keycode settings for Meta keys
+if !has('nvim')
+  execute "set <M-j>=\e" . "j"
+  execute "set <M-k>=\e" . "k"
+endif
+
+nnoremap <M-j> :m .+1<CR>==
+nnoremap <M-k> :m .-2<CR>==
+inoremap <M-j> <Esc>:m .+1<CR>==gi
+inoremap <M-k> <Esc>:m .-2<CR>==gi
+vnoremap <M-j> :m '>+1<CR>gv=gv
+vnoremap <M-k> :m '<-2<CR>gv=gv
 
 " allows cursor change in tmux mode
 if exists('$TMUX')
