@@ -42,8 +42,11 @@
     # List the 10 most recently modified branches
     recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
 
-    # Delete local branches that have been merged into main
-    delete-merged-branches = "!git branch --merged | egrep -v '(^\\*|master|main|staging|demo|dev|wip)' | xargs git branch -d"
+    # List all local branches by age (stale branches)
+    stale = for-each-ref --sort=-committerdate refs/heads/ --format='%(color:yellow)%(refname:short)%(color:reset)\t%(color:blue)%(committerdate:relative)%(color:reset)\t%(subject)'
+
+    # Delete local branches that have been merged into main (handles squashed merges)
+    delete-merged-branches = "!f() { git branch --merged | grep -vE '^\\*|master|main|staging|demo|dev|wip' | xargs -n 1 git branch -d; git branch -vv | grep ': gone]' | grep -v '^*' | awk '{print $1}' | grep -vE '^(master|main|staging|demo|dev|wip)$' | xargs -n 1 git branch -D; }; f"
 
     # Delete remote branches that have been merged into origin/main
     delete-remote-merged-branches = "!git push origin --delete $(git branch -r --merged origin/main | grep origin | egrep -v '>|master|main|staging|demo|dev|wip' | cut -d/ -f2-)"
