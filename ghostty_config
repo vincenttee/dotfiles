@@ -7,3 +7,8 @@ macos-option-as-alt = true
 # (Defining these overrides the default tab navigation automatically)
 keybind = cmd+shift+[=text:\x1b{
 keybind = cmd+shift+]=text:\x1b}
+
+# Fix Cmd+Left/Right to jump cursor to start/end of line
+# Use Home/End escape sequences to avoid conflict with Tmux prefix (Ctrl-a)
+keybind = cmd+left=text:\x1bOH
+keybind = cmd+right=text:\x1bOF
