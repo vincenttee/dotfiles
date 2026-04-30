@@ -1,6 +1,6 @@
-# 🐹 Vim-Go Development Cheat Sheet
+# 🛠️ Vim Development Cheat Sheet
 
-This document tracks the essential shortcuts for Go development in this environment.
+This document tracks the essential shortcuts for Go, Rust, and general development.
 
 ## 🚀 The "Big Three" (Navigation)
 | Key | Action | Description |
