@@ -71,6 +71,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+Plug 'airblade/vim-gitgutter'
 
 " Themes
 Plug 'morhetz/gruvbox'
@@ -117,6 +118,7 @@ autocmd FileType go nmap <leader>t <Plug>(go-test)
 autocmd FileType go nmap <leader>r <Plug>(go-run)
 autocmd FileType go nmap <leader>b <Plug>(go-build)
 autocmd FileType go nmap <leader>c :GoReferrers<CR>
+autocmd FileType go nmap <F2> <Plug>(go-rename)
 autocmd FileType go nmap <leader>a <Plug>(go-alternate) " Toggle between file.go and file_test.go
 
 " FZF + Go Symbols
@@ -164,6 +166,7 @@ colorscheme gruvbox
 
 " FZF Mappings
 nnoremap <C-p> :Files<CR>
+nnoremap <leader>gs :GFiles?<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>h :History<CR>
 nnoremap <leader>f :Rg<Space>
