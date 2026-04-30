@@ -2,6 +2,8 @@ syntax on
 filetype indent on
 filetype plugin indent on
 
+set autoread                    " reload files changed outside vim
+set history=500                 " remember more commands and search history
 set autoindent                  " copy indent from current line
 set backspace=indent,eol,start  " fix backspace behavior
 set clipboard=unnamed           " use system clipboard
@@ -129,10 +131,18 @@ let g:go_list_type = "quickfix"    " Use quickfix for all error lists
 let g:go_echo_command_info = 1    " Echo progress in the command line
 let g:go_gopls_enabled = 1        " Ensure gopls is the backend
 
+" Refresh buffer, clear search highlighting, and redraw screen
+nnoremap <C-L> :checktime<CR>:noh<CR><C-L>
+
+" Close quickfix and preview windows
+nnoremap <leader>q :cclose<CR>:pclose<CR>
+
+" Toggle paste mode
+nnoremap <leader>pp :set invpaste paste?<CR>
+
 " Quickfix Navigation Mappings
 nnoremap <leader>n :cnext<CR>
 nnoremap <leader>p :cprev<CR>
-nnoremap <leader>q :cclose<CR>
 
 " Buffer Navigation (Cycle through open files)
 nnoremap [b :bprevious<CR>
