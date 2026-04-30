@@ -175,4 +175,17 @@ nnoremap <leader>f :Rg<Space>
 command! Format normal! gg=G``
 cabbrev format Format
 
+" Delete trailing white space on save
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+    autocmd BufWritePre *.go,*.py,*.js,*.ts,*.php,*.rs,*.txt :call CleanExtraSpaces()
+endif
+
 
