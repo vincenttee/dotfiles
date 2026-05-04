@@ -31,6 +31,10 @@ bindkey "\e[1;3C" forward-word      # ⌥→
 bindkey "^[[1;9D" beginning-of-line # cmd+←
 bindkey "^[[1;9C" end-of-line       # cmd+→
 
+# Opt+Backspace to delete previous word
+bindkey "\e\x7f" backward-kill-word
+bindkey "\e^H" backward-kill-word
+
 # =============================================================================
 # Aliases & Functions
 # =============================================================================

@@ -35,6 +35,15 @@ set ttimeoutlen=50              " faster key sequence timeout
 set wildmenu                    " visual autocomplete for command menu
 set termguicolors               " enable true colors support
 
+" Map Opt+Backspace (Alt+BS) to delete previous word in Insert/Command mode
+inoremap <M-BS> <C-w>
+cnoremap <M-BS> <C-w>
+" Fallback for terminals sending Esc + Backspace
+inoremap <Esc><BS> <C-w>
+cnoremap <Esc><BS> <C-w>
+inoremap <Esc><C-h> <C-w>
+cnoremap <Esc><C-h> <C-w>
+
 " Theme Configuration
 set background=dark
 let g:gruvbox_italic=1
