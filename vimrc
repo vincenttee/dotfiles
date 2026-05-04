@@ -162,6 +162,9 @@ vnoremap c "_c
 nnoremap C "_C
 vnoremap C "_C
 
+" Standardize Y to yank to end of line
+nnoremap Y y$
+
 colorscheme gruvbox
 
 " FZF Mappings
