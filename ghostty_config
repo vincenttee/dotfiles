@@ -3,12 +3,10 @@ theme = Xcode Dark
 # Enable Option key as Alt/Meta for Vim/Tmux
 macos-option-as-alt = true
 
-# Send escape sequences for tmux to pick up
-# (Defining these overrides the default tab navigation automatically)
-keybind = cmd+shift+[=text:\x01p
-keybind = cmd+shift+]=text:\x01n
-keybind = cmd+{=text:\x01p
-keybind = cmd+}=text:\x01n
+# Send escape sequences for tmux window navigation
+# (Mapped to prefix + C-p and prefix + C-n in tmux.conf)
+keybind = cmd+shift+[=text:\x01\x10
+keybind = cmd+shift+]=text:\x01\x0e
 
 # Fix Cmd+Left/Right to jump cursor to start/end of line
 # Use Home/End escape sequences to avoid conflict with Tmux prefix (Ctrl-a)
