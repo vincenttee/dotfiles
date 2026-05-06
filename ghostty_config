@@ -1,4 +1,4 @@
-theme = Xcode Dark
+theme = Gruvbox Material Dark
 
 # Enable Option key as Alt/Meta for Vim/Tmux
 macos-option-as-alt = true
