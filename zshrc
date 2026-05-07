@@ -16,6 +16,7 @@ export NVM_DIR="$HOME/.nvm"
 # =============================================================================
 setopt NONOMATCH
 setopt PROMPT_SUBST
+setopt EXTENDED_HISTORY
 setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
