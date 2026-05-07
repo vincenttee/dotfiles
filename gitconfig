@@ -43,7 +43,7 @@
     recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
 
     # List all local branches by age (stale branches)
-    stale = for-each-ref --sort=-committerdate refs/heads/ --format='%(color:yellow)%(refname:short)%(color:reset)\t%(color:blue)%(committerdate:relative)%(color:reset)\t%(subject)'
+    stale = for-each-ref --sort=-committerdate refs/heads/ --format='%(color:yellow)%(align:30)%(refname:short)%(end)%(color:reset) %(color:blue)%(align:15)%(committerdate:relative)%(end)%(color:reset) %(subject)'
 
     # Delete local branches that have been merged into main (handles squashed merges)
     delete-merged-branches = "!f() { git branch --merged | grep -vE '^\\*|master|main|staging|demo|dev|wip' | xargs -n 1 git branch -d; git branch -vv | grep ': gone]' | grep -v '^*' | awk '{print $1}' | grep -vE '^(master|main|staging|demo|dev|wip)$' | xargs -n 1 git branch -D; }; f"
