@@ -21,7 +21,7 @@ set incsearch                   " search as characters are entered
 set laststatus=2                " always show statusline
 set lazyredraw                  " redraw only when we need to
 set number                      " show line numbers
-set scrolloff=8                 " keep 8 lines of padding when scrolling
+set scrolloff=15                " keep 15 lines of padding when scrolling
 set ruler                       " show the line and column number
 set shiftwidth=2                " number of spaces for auto-indent
 set showcmd                     " show command in bottom bar
