@@ -139,6 +139,7 @@ autocmd FileType go nmap <leader>S :GoDeclsDir<CR>
 
 " UI & Performance
 let g:go_list_type = "quickfix"    " Use quickfix for all error lists
+let g:go_list_height = 15         " Increase height of the quickfix window
 let g:go_echo_command_info = 1    " Echo progress in the command line
 let g:go_gopls_enabled = 1        " Ensure gopls is the backend
 
