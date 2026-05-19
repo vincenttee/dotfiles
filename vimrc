@@ -34,6 +34,7 @@ set undofile                    " maintain undo history between sessions
 set ttimeoutlen=50              " faster key sequence timeout
 set wildmenu                    " visual autocomplete for command menu
 set termguicolors               " enable true colors support
+set regexpengine=0              " Use automatic regexpengine
 
 " Map Opt+Backspace (Alt+BS) to delete previous word in Insert/Command mode
 inoremap <M-BS> <C-w>
