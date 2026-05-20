@@ -98,6 +98,7 @@ fi
 [ -f ~/fzf-git.sh ] && source ~/fzf-git.sh
 
 # FZF Options
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
 export FZF_DEFAULT_OPTS='--height 40% --border
 --color=fg:#e5dbc4,bg:-1,hl:#d69e49
 --color=fg+:#b8af9a,bg+:#262626,hl+:#f0a327

@@ -131,10 +131,15 @@ autocmd FileType go nmap <leader>c :GoReferrers<CR>
 autocmd FileType go nmap <F2> <Plug>(go-rename)
 autocmd FileType go nmap <leader>a <Plug>(go-alternate) " Toggle between file.go and file_test.go
 
-" FZF + Go Symbols
-let g:go_decls_mode = 'fzf'
-let g:fzf_layout = { 'down': '~40%' } " Avoid popup window to fix E863 error
+" FZF Layout: Adaptive & Large Preview
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+let g:fzf_preview_window = ['right:65%,border-left', 'ctrl-/']
 
+" Optimized 'Files' command with smart sorting
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--info=inline', '--tiebreak=end']}), <bang>0)
+
+let g:go_decls_mode = 'fzf'
 autocmd FileType go nmap <leader>s :GoDecls<CR>
 autocmd FileType go nmap <leader>S :GoDeclsDir<CR>
 
