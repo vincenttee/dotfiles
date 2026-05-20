@@ -26,6 +26,14 @@ path=($GOPATH/bin $path)
 # Export path to subshells
 export PATH
 
+# FZF Configuration
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
+export FZF_DEFAULT_OPTS='--height 40% --border
+--color=fg:#e5dbc4,bg:-1,hl:#d69e49
+--color=fg+:#b8af9a,bg+:#262626,hl+:#f0a327
+--color=info:#b5a172,prompt:#ffa727,pointer:#ffa727
+--color=marker:#cc4b5f,spinner:#d18822,header:#cc4b5f'
+
 # History File (Zsh specific)
 export HISTFILE=~/.zsh_history
 export HISTSIZE=10000
