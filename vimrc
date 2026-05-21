@@ -190,9 +190,36 @@ nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>h :History<CR>
 nnoremap <leader>f :Rg<Space>
 
-" Formatting: Define :Format and allow lowercase :format via abbreviation
-command! Format normal! gg=G``
+" Visualize trailing whitespace and tabs cleanly
+set list
+set listchars=tab:▸\ ,trail:·,extends:»,precedes:«
+
+" Unified Formatter: Indents, strips trailing space, cleans EOF, preserves cursor
+fun! Format()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+
+    " 1. Indent the entire file silently
+    silent normal! gg=G
+
+    " 2. Strip trailing whitespaces
+    silent! %s/\s\+$//e
+
+    " 3. Strip duplicate empty lines at EOF (leave exactly one final newline)
+    silent! %s/\(\n\s*\)\+\%$//e
+
+    " Restore cursor and search registry
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+" Define/override the :Format command to use the unified routine
+command! Format call Format()
 cabbrev format Format
+
+" Create keyboard shortcuts
+nnoremap <leader>= :Format<CR>
+nnoremap <leader>F :Format<CR>
 
 " Delete trailing white space on save
 fun! CleanExtraSpaces()
