@@ -26,11 +26,11 @@ brew bundle --file=Brewfile
 ```
 
 ### 3. Setup Symbolic Links
-Use these commands to link the configuration files to your home directory:
+Run these commands from within the cloned repository directory to link the configuration files to your home directory:
 
 ```bash
 # Vim
-ln -sf ~/dotfiles/vimrc ~/.vimrc
+ln -sf $(pwd)/vimrc ~/.vimrc
 mkdir -p ~/.vim/undodir
 
 # Install vim-plug and plugins
@@ -38,12 +38,12 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.c
 vim +PlugInstall +qall
 
 # Zsh
-ln -sf ~/dotfiles/zshrc ~/.zshrc
-ln -sf ~/dotfiles/zshenv ~/.zshenv
+ln -sf $(pwd)/zshrc ~/.zshrc
+ln -sf $(pwd)/zshenv ~/.zshenv
 
 # Git
-ln -sf ~/dotfiles/gitconfig ~/.gitconfig
+ln -sf $(pwd)/gitconfig ~/.gitconfig
 
 # Tmux
-ln -sf ~/dotfiles/tmux.conf ~/.tmux.conf
+ln -sf $(pwd)/tmux.conf ~/.tmux.conf
 ```
