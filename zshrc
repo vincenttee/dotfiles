@@ -94,6 +94,48 @@ if type fzf &>/dev/null; then
   source <(fzf --zsh)
 fi
 
+# Live Interactive Search (ripgrep + fzf)
+fif() {
+  local RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case"
+  local INITIAL_QUERY="${*:-}"
+  local selection
+
+  # --disabled tells fzf not to do internal fuzzy filtering,
+  # letting ripgrep dynamically re-query the file system as you type.
+  selection=$(FZF_DEFAULT_COMMAND="$RG_PREFIX -- $(printf %q "$INITIAL_QUERY")" \
+    fzf --ansi \
+    --disabled --query "$INITIAL_QUERY" \
+    --bind "change:reload:$RG_PREFIX -- {q} || true" \
+    --delimiter : \
+    --preview 'bat --theme=gruvbox --color=always --style=numbers {1} --highlight-line {2}' \
+    --preview-window 'right:60%,border-left,+{2}-5' \
+    --prompt 'Search Content: ' \
+    --header 'Press Enter to open in Vim | ESC to cancel')
+
+  if [[ -n "$selection" ]]; then
+    local file line
+    file=$(echo "$selection" | cut -d: -f1)
+    line=$(echo "$selection" | cut -d: -f2)
+    ${EDITOR:-vim} "$file" "+$line"
+    return 0
+  fi
+  return 1
+}
+
+# Zsh Line Editor (ZLE) Widget for Ctrl+F
+fif-widget() {
+  zle -I # Invalidate widget area to run fullscreen fzf safely
+
+  # Run search with the current command line buffer as initial input
+  if fif "$BUFFER"; then
+    BUFFER="" # Clear prompt buffer if we successfully opened a file
+  fi
+
+  zle -R # Redraw prompt cleanly
+}
+zle -N fif-widget
+bindkey '^F' fif-widget
+
 # fzf-git.sh (https://github.com/junegunn/fzf-git.sh)
 [ -f ~/fzf-git.sh ] && source ~/fzf-git.sh
 
