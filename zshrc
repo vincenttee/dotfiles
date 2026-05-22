@@ -107,7 +107,7 @@ fif() {
     --disabled --query "$INITIAL_QUERY" \
     --bind "change:reload:$RG_PREFIX -- {q} || true" \
     --delimiter : \
-    --preview 'bat --theme=gruvbox --color=always --style=numbers {1} --highlight-line {2}' \
+    --preview 'bat --paging=never --theme=gruvbox --color=always --style=numbers {1} --highlight-line {2}' \
     --preview-window 'right:60%,border-left,+{2}-5' \
     --prompt 'Search Content: ' \
     --header 'Press Enter to open in Vim | ESC to cancel')
