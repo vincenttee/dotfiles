@@ -31,7 +31,6 @@ brew "noti"
 brew "nvm"
 brew "pandoc"
 brew "postgresql", restart_service: true
-brew "reattach-to-user-namespace"
 brew "redis", restart_service: true
 brew "ripgrep"
 brew "supervisor", restart_service: true
