@@ -116,7 +116,7 @@ fif() {
     local file line
     file=$(echo "$selection" | cut -d: -f1)
     line=$(echo "$selection" | cut -d: -f2)
-    ${EDITOR:-vim} "$file" "+$line"
+    ${EDITOR:-vim} "$file" "+$line" < /dev/tty
     return 0
   fi
   return 1
