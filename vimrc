@@ -215,7 +215,6 @@ endfun
 
 " Define/override the :Format command to use the unified routine
 command! Format call Format()
-cabbrev format Format
 
 " Create keyboard shortcuts
 nnoremap <leader>= :Format<CR>
