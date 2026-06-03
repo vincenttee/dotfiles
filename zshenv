@@ -33,6 +33,7 @@ export FZF_DEFAULT_OPTS='--height 40% --border
 --color=fg+:#b8af9a,bg+:#262626,hl+:#f0a327
 --color=info:#b5a172,prompt:#ffa727,pointer:#ffa727
 --color=marker:#cc4b5f,spinner:#d18822,header:#cc4b5f'
+export FZF_CTRL_R_OPTS="--tiebreak=index"
 
 # History File (Zsh specific)
 export HISTFILE=~/.zsh_history
