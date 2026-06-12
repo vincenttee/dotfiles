@@ -125,6 +125,7 @@ let g:go_highlight_extra_types = 1
 
 " Essential Mappings for Go
 autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <leader>tt <Plug>(go-test-func)
 autocmd FileType go nmap <leader>r <Plug>(go-run)
 autocmd FileType go nmap <leader>b <Plug>(go-build)
 autocmd FileType go nmap <leader>c :GoReferrers<CR>
