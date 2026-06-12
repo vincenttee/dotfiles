@@ -1,8 +1,38 @@
 # Development
 [ -f ~/.developmentrc ] && . ~/.developmentrc
 
-# Zsh Path Optimization (Ensures unique entries in $PATH)
-typeset -U path
+# Zsh Path Optimization (Ensures unique entries)
+typeset -U path fpath manpath infopath
+
+# Homebrew Environment
+# Hardcoded for speed (avoids calling 'brew shellenv' which is slow)
+if [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX="/opt/homebrew"
+elif [[ -d /usr/local/Homebrew ]]; then
+  export HOMEBREW_PREFIX="/usr/local"
+fi
+
+if [[ -n "$HOMEBREW_PREFIX" ]]; then
+  export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+  export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
+  path=(
+    $HOMEBREW_PREFIX/bin
+    $HOMEBREW_PREFIX/sbin
+    $path
+  )
+  manpath=(
+    $HOMEBREW_PREFIX/share/man
+    $manpath
+  )
+  infopath=(
+    $HOMEBREW_PREFIX/share/info
+    $infopath
+  )
+  fpath=(
+    $HOMEBREW_PREFIX/share/zsh/site-functions
+    $fpath
+  )
+fi
 
 # Global Environment
 export EDITOR=vim

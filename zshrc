@@ -4,19 +4,10 @@
 # zmodload zsh/zprof
 
 # =============================================================================
-# Environment & Homebrew
+# Environment
 # =============================================================================
-# Hardcoded Homebrew env for speed (avoids calling 'brew shellenv' which is slow)
-if [[ -d /opt/homebrew ]]; then
-  export HOMEBREW_PREFIX="/opt/homebrew"
-  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-  export HOMEBREW_REPOSITORY="/opt/homebrew"
-  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
-  export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}"
-  export INFOPATH="/opt/homebrew/share/info${INFOPATH+:$INFOPATH}"
-fi
-
-export PATH="$HOME/bin:/usr/local/bin:$PATH"
+# Most environment and path configuration is in .zshenv for better performance
+# and to ensure availability in non-interactive shells.
 
 # =============================================================================
 # Options & History
@@ -69,18 +60,13 @@ zstyle ':completion:*' matcher-list 'm:{a-z1-9}={A-Z1-9}' # case-insensitive com
 zstyle ':completion:*' menu select                        # arrow keys to select from menu
 zstyle ':completion:*:default' list-colors ''             # use terminal colors in menu
 
-# Add Homebrew completions to FPATH
-if [[ -n "$HOMEBREW_PREFIX" ]]; then
-  FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
-fi
-
-# Optimized compinit (only runs if cache is > 24h old)
+# Optimized compinit (only runs full check if cache is > 24h old)
 autoload -Uz compinit
-for dump in "${ZDOTDIR:-$HOME}/.zcompdump"(N.m-1); do
+if [[ -n "${ZDOTDIR:-$HOME}/.zcompdump"(N.m-1) ]]; then
+  compinit -C
+else
   compinit
-  break
-done
-[[ -z "$dump" ]] && compinit -C
+fi
 
 # Cached NPM completion
 if type npm &>/dev/null; then
@@ -126,16 +112,30 @@ fi
 
 # Live Interactive Search (ripgrep + fzf)
 fif() {
+  if ! type rg &>/dev/null; then
+    echo "fif: 'rg' (ripgrep) not found."
+    return 1
+  fi
+  if ! type fzf &>/dev/null; then
+    echo "fif: 'fzf' not found."
+    return 1
+  fi
+
   local RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case"
   local INITIAL_QUERY="${*:-}"
   local selection
+  local preview_cmd='cat {1}'
+
+  if type bat &>/dev/null; then
+    preview_cmd='bat --paging=never --theme=gruvbox --color=always --style=numbers {1} --highlight-line {2}'
+  fi
 
   selection=$(FZF_DEFAULT_COMMAND="$RG_PREFIX -- $(printf %q "$INITIAL_QUERY")" \
     fzf --ansi \
     --disabled --query "$INITIAL_QUERY" \
     --bind "change:reload:$RG_PREFIX -- {q} || true" \
     --delimiter : \
-    --preview 'bat --paging=never --theme=gruvbox --color=always --style=numbers {1} --highlight-line {2}' \
+    --preview "$preview_cmd" \
     --preview-window 'right:60%,border-left,+{2}-5' \
     --prompt 'Search Content: ' \
     --header 'Press Enter to open in Vim | ESC to cancel')
