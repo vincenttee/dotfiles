@@ -1,15 +1,22 @@
 # =============================================================================
+# Benchmarking (Enable this to profile startup)
+# =============================================================================
+# zmodload zsh/zprof
+
+# =============================================================================
 # Environment & Homebrew
 # =============================================================================
-# Initialize Homebrew based on architecture
-if [[ -f /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -f /usr/local/bin/brew ]]; then
-  eval "$(/usr/local/bin/brew shellenv)"
+# Hardcoded Homebrew env for speed (avoids calling 'brew shellenv' which is slow)
+if [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+  export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}"
+  export INFOPATH="/opt/homebrew/share/info${INFOPATH+:$INFOPATH}"
 fi
 
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
-export NVM_DIR="$HOME/.nvm"
 
 # =============================================================================
 # Options & History
@@ -63,8 +70,8 @@ zstyle ':completion:*' menu select                        # arrow keys to select
 zstyle ':completion:*:default' list-colors ''             # use terminal colors in menu
 
 # Add Homebrew completions to FPATH
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+if [[ -n "$HOMEBREW_PREFIX" ]]; then
+  FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
 fi
 
 # Optimized compinit (only runs if cache is > 24h old)
@@ -75,23 +82,46 @@ for dump in "${ZDOTDIR:-$HOME}/.zcompdump"(N.m-1); do
 done
 [[ -z "$dump" ]] && compinit -C
 
-# Simplified NPM completion
+# Cached NPM completion
 if type npm &>/dev/null; then
-  source <(npm completion)
+  NPM_COMP_CACHE="${ZSH_CACHE_DIR:-$HOME/.cache}/zsh_npm_completion"
+  [[ -d "${NPM_COMP_CACHE:h}" ]] || mkdir -p "${NPM_COMP_CACHE:h}"
+  if [[ ! -f "$NPM_COMP_CACHE" ]]; then
+    npm completion > "$NPM_COMP_CACHE" 2>/dev/null
+  fi
+  [[ -f "$NPM_COMP_CACHE" ]] && source "$NPM_COMP_CACHE"
 fi
 
 # =============================================================================
-# Integrations
+# Integrations & Hooks
 # =============================================================================
-# Direnv
+
+# Direnv (Static Hook avoids binary execution on startup)
 if type direnv &>/dev/null; then
-  eval "$(direnv hook zsh)"
+  _direnv_hook() {
+    trap -- '' SIGINT;
+    eval "$("direnv" export zsh)";
+    trap - SIGINT;
+  }
+  typeset -ag precmd_functions;
+  if [[ -z "${precmd_functions[(r)_direnv_hook]}" ]]; then
+    precmd_functions=( _direnv_hook ${precmd_functions[@]} )
+  fi
+  typeset -ag chpwd_functions;
+  if [[ -z "${chpwd_functions[(r)_direnv_hook]}" ]]; then
+    chpwd_functions=( _direnv_hook ${chpwd_functions[@]} )
+  fi
 fi
 
-# FZF
+# FZF (Cached script avoids binary execution on startup)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 if type fzf &>/dev/null; then
-  source <(fzf --zsh)
+  FZF_CACHE="${ZSH_CACHE_DIR:-$HOME/.cache}/zsh_fzf"
+  [[ -d "${FZF_CACHE:h}" ]] || mkdir -p "${FZF_CACHE:h}"
+  if [[ ! -f "$FZF_CACHE" ]]; then
+    fzf --zsh > "$FZF_CACHE" 2>/dev/null
+  fi
+  [[ -f "$FZF_CACHE" ]] && source "$FZF_CACHE"
 fi
 
 # Live Interactive Search (ripgrep + fzf)
@@ -100,8 +130,6 @@ fif() {
   local INITIAL_QUERY="${*:-}"
   local selection
 
-  # --disabled tells fzf not to do internal fuzzy filtering,
-  # letting ripgrep dynamically re-query the file system as you type.
   selection=$(FZF_DEFAULT_COMMAND="$RG_PREFIX -- $(printf %q "$INITIAL_QUERY")" \
     fzf --ansi \
     --disabled --query "$INITIAL_QUERY" \
@@ -124,14 +152,11 @@ fif() {
 
 # Zsh Line Editor (ZLE) Widget for Ctrl+F
 fif-widget() {
-  zle -I # Invalidate widget area to run fullscreen fzf safely
-
-  # Run search with the current command line buffer as initial input
+  zle -I 
   if fif "$BUFFER"; then
-    BUFFER="" # Clear prompt buffer if we successfully opened a file
+    BUFFER=""
   fi
-
-  zle -R # Redraw prompt cleanly
+  zle -R
 }
 zle -N fif-widget
 bindkey '^F' fif-widget
@@ -139,7 +164,9 @@ bindkey '^F' fif-widget
 # fzf-git.sh (https://github.com/junegunn/fzf-git.sh)
 [ -f ~/fzf-git.sh ] && source ~/fzf-git.sh
 
-# Git Prompt Options
+# =============================================================================
+# Prompt & Git
+# =============================================================================
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_SHOWUPSTREAM="auto"
@@ -149,8 +176,8 @@ export GIT_PS1_SHOWCOLORHINTS=
 [ -f ~/.git-prompt.sh ] && source ~/.git-prompt.sh
 export PS1='%c$(__git_ps1 " [%s]") $ '
 
-# NVM (Node Version Manager)
-if [[ -n "$HOMEBREW_PREFIX" ]]; then
-  [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-  [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+# Final profiler check (uncomment zmodload at top to use)
+if command -v zprof >/dev/null; then
+  zprof
 fi
+
