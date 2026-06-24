@@ -148,7 +148,7 @@ fif() {
 
 # Zsh Line Editor (ZLE) Widget for Ctrl+F
 fif-widget() {
-  zle -I 
+  zle -I
   if fif "$BUFFER"; then
     BUFFER=""
   fi
