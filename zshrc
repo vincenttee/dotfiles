@@ -163,24 +163,60 @@ bindkey '^F' fif-widget
 # =============================================================================
 # Prompt & Git
 # =============================================================================
-# Optimized Git Prompt using native vcs_info
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' unstagedstr '*'
-zstyle ':vcs_info:git:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats ' [%b %u%c]'
-zstyle ':vcs_info:git:*' actionformats ' [%b|%a %u%c]'
+# Optimized Git Prompt (Single-call Porcelain Status)
+_update_git_prompt() {
+  GIT_PS1=""
+  # Single git call for all status info (branch, upstream, staged, dirty, untracked)
+  local status_out
+  status_out=$(git status --branch --porcelain=v1 --untracked-files=normal 2>/dev/null)
 
-_update_vcs_info() {
-  vcs_info
-  # Clean up the space if there's no status to display
-  GIT_PS1="${vcs_info_msg_0_/ ]/]}"
+  # Exit if not in a git repo
+  if [[ -z "$status_out" ]]; then
+    return
+  fi
+
+  local -a lines
+  lines=(${(f)status_out})
+
+  # Parse Branch and Upstream from the first line (e.g., ## master...origin/master [ahead 1])
+  local line1=$lines[1]
+  local branch_tmp=${line1#\#\# }
+  local branch=${branch_tmp%%...*}
+
+  local markers=""
+  # Upstream status
+  if [[ "$line1" == *'['* ]]; then
+    [[ "$line1" == *"ahead"* ]] && markers+=">"
+    [[ "$line1" == *"behind"* ]] && markers+="<"
+    [[ "$markers" == "><" ]] && markers="<>"
+    [[ "$line1" == *"gone"* ]] && markers+="!"
+  elif [[ "$line1" == *"..."* ]]; then
+    markers+="="
+  fi
+
+  # Working tree status (lines 2 and beyond)
+  if (( ${#lines} > 1 )); then
+    local -a body
+    body=("${(@)lines[2,-1]}")
+    # Staged: First column is not space or ?
+    (( ${#body[(r)[^ ?]*]} )) && markers+="+"
+    # Dirty: Second column is not space or ?
+    (( ${#body[(r)?[^ ?]*]} )) && markers+="*"
+    # Untracked: Starts with ??
+    (( ${#body[(r)\?\?*]} )) && markers+="?"
+  fi
+
+  # Format output
+  if [[ -n "$markers" ]]; then
+    GIT_PS1=" [$branch $markers]"
+  else
+    GIT_PS1=" [$branch]"
+  fi
 }
 
 # Apply Prompt
-typeset -ag precmd_functions
-[[ -z "${precmd_functions[(r)_update_vcs_info]}" ]] && precmd_functions+=( _update_vcs_info )
+typeset -gU precmd_functions
+precmd_functions+=(_update_git_prompt)
 
 export PS1='%c${GIT_PS1} $ '
 
