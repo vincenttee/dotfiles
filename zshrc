@@ -82,21 +82,16 @@ fi
 # Integrations & Hooks
 # =============================================================================
 
-# Direnv (Static Hook avoids binary execution on startup)
-if type direnv &>/dev/null; then
+# Direnv (Static Hook)
+if (( $+commands[direnv] )); then
   _direnv_hook() {
-    trap -- '' SIGINT;
-    eval "$("direnv" export zsh)";
-    trap - SIGINT;
+    trap -- '' SIGINT
+    eval "$("direnv" export zsh)"
+    trap - SIGINT
   }
-  typeset -ag precmd_functions;
-  if [[ -z "${precmd_functions[(r)_direnv_hook]}" ]]; then
-    precmd_functions=( _direnv_hook ${precmd_functions[@]} )
-  fi
-  typeset -ag chpwd_functions;
-  if [[ -z "${chpwd_functions[(r)_direnv_hook]}" ]]; then
-    chpwd_functions=( _direnv_hook ${chpwd_functions[@]} )
-  fi
+  typeset -ag precmd_functions chpwd_functions
+  [[ -z "${precmd_functions[(r)_direnv_hook]}" ]] && precmd_functions+=( _direnv_hook )
+  [[ -z "${chpwd_functions[(r)_direnv_hook]}" ]] && chpwd_functions+=( _direnv_hook )
 fi
 
 # FZF (Cached script avoids binary execution on startup)
@@ -167,14 +162,26 @@ bindkey '^F' fif-widget
 # =============================================================================
 # Prompt & Git
 # =============================================================================
-export GIT_PS1_SHOWDIRTYSTATE=1
-export GIT_PS1_SHOWUNTRACKEDFILES=1
-export GIT_PS1_SHOWUPSTREAM="auto"
-export GIT_PS1_SHOWCOLORHINTS=
+# Optimized Git Prompt using native vcs_info
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' unstagedstr '*'
+zstyle ':vcs_info:git:*' stagedstr '+'
+zstyle ':vcs_info:git:*' formats ' [%b %u%c]'
+zstyle ':vcs_info:git:*' actionformats ' [%b|%a %u%c]'
 
-# Git Prompt
-[ -f ~/.git-prompt.sh ] && source ~/.git-prompt.sh
-export PS1='%c$(__git_ps1 " [%s]") $ '
+_update_vcs_info() {
+  vcs_info
+  # Clean up the space if there's no status to display
+  GIT_PS1="${vcs_info_msg_0_/ ]/]}"
+}
+
+# Apply Prompt
+typeset -ag precmd_functions
+[[ -z "${precmd_functions[(r)_update_vcs_info]}" ]] && precmd_functions+=( _update_vcs_info )
+
+export PS1='%c${GIT_PS1} $ '
 
 # Final profiler check (uncomment zmodload at top to use)
 if command -v zprof >/dev/null; then
