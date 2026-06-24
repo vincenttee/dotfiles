@@ -37,6 +37,7 @@ bindkey "\e^H" backward-kill-word
 # =============================================================================
 # Aliases & Functions
 # =============================================================================
+alias gs="git status"
 alias ls="ls -G"
 alias lsp="ls -lhtF"
 alias python="python3"
@@ -187,4 +188,3 @@ export PS1='%c${GIT_PS1} $ '
 if command -v zprof >/dev/null; then
   zprof
 fi
-
