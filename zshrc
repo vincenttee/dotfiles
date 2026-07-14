@@ -69,6 +69,18 @@ else
   compinit
 fi
 
+# Bash-style completion support (required for terraform)
+if (( $+commands[terraform] )); then
+  # Lazy-load completion on first Tab press to speed up shell startup
+  _terraform_lazy_complete() {
+    compdef -d terraform
+    autoload -Uz bashcompinit && bashcompinit
+    complete -o nospace -C "$commands[terraform]" terraform
+    _normal
+  }
+  compdef _terraform_lazy_complete terraform
+fi
+
 # Cached NPM completion
 if type npm &>/dev/null; then
   NPM_COMP_CACHE="${ZSH_CACHE_DIR:-$HOME/.cache}/zsh_npm_completion"
