@@ -31,6 +31,11 @@ This document tracks the essential shortcuts for Go, Rust, and general developme
 | **`\b`** | **B**uffers | List currently open files. |
 | **`\h`** | **H**istory | List recently opened files (MRU). |
 
+## 📂 File Explorer (NERDTree)
+| Key | Action | Description |
+|-----|--------|-------------|
+| **`\e`** | **E**xplorer Toggle | Open or close the file explorer sidebar. |
+
 ## 🌿 Git Operations (GitGutter)
 | Key | Action | Description |
 |-----|--------|-------------|

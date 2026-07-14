@@ -78,14 +78,16 @@ endif
 " Plugins
 call plug#begin('~/.vim/plugged')
 
+Plug 'airblade/vim-gitgutter'
+Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'ghifarit53/tokyonight-vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-Plug 'airblade/vim-gitgutter'
-
-" Themes
 Plug 'morhetz/gruvbox'
-Plug 'ghifarit53/tokyonight-vim'
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+
+call plug#end() " initialize plugin system
 
 " Multi-cursor: Press 'C' in Visual Mode to add cursors to all selected lines
 let g:VM_maps = {}
@@ -104,10 +106,6 @@ nnoremap <S-Tab> <<
 " Allow Shift-Tab to outdent in Insert Mode
 inoremap <S-Tab> <C-d>
 
-Plug 'fatih/vim-go', { 'for': 'go' }
-
-call plug#end() " initialize plugin system
-
 " vim-go configuration
 let g:go_def_mode='gopls'          " Use gopls for definition jumps
 let g:go_info_mode='gopls'         " Use gopls for hover/info
@@ -124,13 +122,16 @@ let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
 
 " Essential Mappings for Go
-autocmd FileType go nmap <leader>t <Plug>(go-test)
-autocmd FileType go nmap <leader>tt <Plug>(go-test-func)
-autocmd FileType go nmap <leader>r <Plug>(go-run)
-autocmd FileType go nmap <leader>b <Plug>(go-build)
-autocmd FileType go nmap <leader>c :GoReferrers<CR>
-autocmd FileType go nmap <F2> <Plug>(go-rename)
-autocmd FileType go nmap <leader>a <Plug>(go-alternate) " Toggle between file.go and file_test.go
+augroup GoMappings
+  autocmd!
+  autocmd FileType go nmap <leader>t <Plug>(go-test)
+  autocmd FileType go nmap <leader>tt <Plug>(go-test-func)
+  autocmd FileType go nmap <leader>r <Plug>(go-run)
+  autocmd FileType go nmap <leader>b <Plug>(go-build)
+  autocmd FileType go nmap <leader>c :GoReferrers<CR>
+  autocmd FileType go nmap <F2> <Plug>(go-rename)
+  autocmd FileType go nmap <leader>a <Plug>(go-alternate) " Toggle between file.go and file_test.go
+augroup END
 
 " FZF Layout: Adaptive & Large Preview
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
@@ -191,6 +192,17 @@ nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>h :History<CR>
 nnoremap <leader>f :Rg<Space>
 
+" NERDTree Mappings & Configuration
+nnoremap <leader>e :NERDTreeToggle<CR>
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+
+augroup NerdTreeAutocmds
+  autocmd!
+  " Exit Vim if NERDTree is the only window remaining in the only tab.
+  autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+augroup END
+
 " Visualize trailing whitespace and tabs cleanly
 set list
 set listchars=tab:▸\ ,trail:·,extends:»,precedes:«
@@ -231,7 +243,10 @@ fun! CleanExtraSpaces()
 endfun
 
 if has("autocmd")
-    autocmd BufWritePre *.go,*.py,*.js,*.ts,*.php,*.rs,*.txt :call CleanExtraSpaces()
+    augroup CleanExtraSpacesGroup
+        autocmd!
+        autocmd BufWritePre *.go,*.py,*.js,*.ts,*.php,*.rs,*.txt :call CleanExtraSpaces()
+    augroup END
 endif
 
 
