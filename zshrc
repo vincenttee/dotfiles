@@ -118,6 +118,16 @@ if type fzf &>/dev/null; then
   [[ -f "$FZF_CACHE" ]] && source "$FZF_CACHE"
 fi
 
+# Zoxide (Smart directory jumper)
+if (( $+commands[zoxide] )); then
+  ZOXIDE_CACHE="${ZSH_CACHE_DIR:-$HOME/.cache}/zsh_zoxide"
+  [[ -d "${ZOXIDE_CACHE:h}" ]] || mkdir -p "${ZOXIDE_CACHE:h}"
+  if [[ ! -f "$ZOXIDE_CACHE" ]]; then
+    zoxide init zsh > "$ZOXIDE_CACHE" 2>/dev/null
+  fi
+  [[ -f "$ZOXIDE_CACHE" ]] && source "$ZOXIDE_CACHE"
+fi
+
 # Live Interactive Search (ripgrep + fzf)
 fif() {
   if ! type rg &>/dev/null; then
