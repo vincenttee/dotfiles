@@ -6,6 +6,7 @@ My personal collection of configuration files for macOS.
 
 - **Vim (`vimrc`)**: Persistent undo, fzf fuzzy finding, and line manipulation.
 - **Zsh (`zshrc`, `zshenv`)**: Shell aliases and environment settings.
+- **Ripgrep (`ripgreprc`)**: Search defaults and exclusions.
 - **Git (`gitconfig`)**: Global defaults and exclusions.
 - **Tmux (`tmux.conf`)**: Terminal multiplexing.
 - **Homebrew (`Brewfile`)**: macOS apps and CLI tools.
@@ -40,6 +41,9 @@ vim +PlugInstall +qall
 # Zsh
 ln -sf $(pwd)/zshrc ~/.zshrc
 ln -sf $(pwd)/zshenv ~/.zshenv
+
+# Ripgrep
+ln -sf $(pwd)/ripgreprc ~/.ripgreprc
 
 # Git
 ln -sf $(pwd)/gitconfig ~/.gitconfig

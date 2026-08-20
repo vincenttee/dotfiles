@@ -1,0 +1,12 @@
+# Ripgrep Configuration File
+# Exported via RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
+# Case sensitivity: Smart case (case-insensitive unless uppercase letters are used)
+--smart-case
+
+# Include hidden files/folders (e.g., .github/, .eslintrc)
+--hidden
+
+# Exclude internal / metadata noise
+--glob=!.git/*
+--glob=!.DS_Store

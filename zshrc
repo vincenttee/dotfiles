@@ -139,7 +139,7 @@ fif() {
     return 1
   fi
 
-  local RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case"
+  local RG_PREFIX="rg --column --line-number --no-heading --color=always"
   local INITIAL_QUERY="${*:-}"
   local selection
   local preview_cmd='cat {1}'

@@ -56,8 +56,12 @@ path=($GOPATH/bin $path)
 # Export path to subshells
 export PATH
 
+# Ripgrep Configuration
+[[ -f "$HOME/.ripgreprc" ]] && export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
 # FZF Configuration
-export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='--height 40% --border
 --color=fg:#e5dbc4,bg:-1,hl:#d69e49
 --color=fg+:#b8af9a,bg+:#262626,hl+:#f0a327
