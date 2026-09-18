@@ -7,7 +7,7 @@ brew "bandwhich"
 brew "bat"
 brew "caddy", restart_service: true
 brew "delve"
-brew "diff-so-fancy"
+brew "git-delta"
 brew "direnv"
 brew "docker"
 brew "ffsend"

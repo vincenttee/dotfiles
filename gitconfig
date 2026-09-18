@@ -5,7 +5,7 @@
 [commit]
     gpgsign = true
 [core]
-    pager = diff-so-fancy | less --tabs=4 -RFX
+    pager = delta
     excludesfile = ~/.gitignore_global
 [init]
     defaultBranch = main
@@ -59,13 +59,16 @@
     diff = auto
     grep = auto
     status = auto
-[color "diff-highlight"]
-    newHighlight = green bold 22
-    newNormal = green bold
-    oldHighlight = red bold 52
-    oldNormal = red bold
 [interactive]
+    diffFilter = delta --color-only
     singlekey = true
+[delta]
+    navigate = true
+    line-numbers = true
+    side-by-side = false
+    syntax-theme = gruvbox-dark
+[merge]
+    conflictStyle = zdiff3
 [push]
     default = simple
 [status]
