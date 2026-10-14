@@ -59,6 +59,9 @@ export PATH
 # Ripgrep Configuration
 [[ -f "$HOME/.ripgreprc" ]] && export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
+# Bat Configuration
+export BAT_THEME="gruvbox-dark"
+
 # FZF Configuration
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

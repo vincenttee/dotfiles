@@ -145,7 +145,7 @@ fif() {
   local preview_cmd='cat {1}'
 
   if type bat &>/dev/null; then
-    preview_cmd='bat --paging=never --theme=gruvbox --color=always --style=numbers {1} --highlight-line {2}'
+    preview_cmd='bat --paging=never --theme=gruvbox-dark --color=always --style=numbers {1} --highlight-line {2}'
   fi
 
   selection=$(FZF_DEFAULT_COMMAND="$RG_PREFIX -- $(printf %q "$INITIAL_QUERY")" \
