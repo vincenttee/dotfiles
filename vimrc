@@ -130,7 +130,8 @@ augroup GoMappings
   autocmd FileType go nmap <leader>b <Plug>(go-build)
   autocmd FileType go nmap <leader>c :GoReferrers<CR>
   autocmd FileType go nmap <F2> <Plug>(go-rename)
-  autocmd FileType go nmap <leader>a <Plug>(go-alternate) " Toggle between file.go and file_test.go
+  " Toggle between file.go and file_test.go
+  autocmd FileType go nmap <leader>a <Plug>(go-alternate)
 augroup END
 
 " FZF Layout: Adaptive & Large Preview
@@ -167,7 +168,8 @@ nnoremap <leader>p :cprev<CR>
 " Buffer Navigation (Cycle through open files)
 nnoremap [b :bprevious<CR>
 nnoremap ]b :bnext<CR>
-nnoremap <leader><leader> <C-^> " Double-leader to toggle between last two files
+" Double-leader to toggle between last two files
+nnoremap <leader><leader> <C-^>
 
 " Prevent deletion/change from overriding the yank register
 nnoremap x "_x
