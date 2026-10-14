@@ -1,11 +1,19 @@
-syntax on
-filetype indent on
-filetype plugin indent on
+" Baseline Vim version.
+let s:vim_baseline = '9.1.1752'
+if !has('patch-' . s:vim_baseline)
+  execute 'autocmd VimEnter * echohl WarningMsg | echom "vimrc: Vim is older than baseline '
+        \ . s:vim_baseline . '" | echohl None'
+endif
+
+" Start from Vim's defaults; only deviations are set below.
+" Clear skip_defaults_vim, which system vimrcs (e.g. macOS) set.
+unlet! skip_defaults_vim
+source $VIMRUNTIME/defaults.vim
+set mouse=                      " disable mouse
 
 set autoread                    " reload files changed outside vim
 set history=500                 " remember more commands and search history
 set autoindent                  " copy indent from current line
-set backspace=indent,eol,start  " fix backspace behavior
 set clipboard=unnamed           " use system clipboard
 set cursorline                  " highlight current line
 set encoding=utf-8              " use utf-8 encoding
@@ -17,14 +25,11 @@ set foldnestmax=10              " 10 nested fold max
 set hidden                      " allow switching buffers without saving
 set hlsearch                    " highlight matches
 set ignorecase                  " ignore case when searching
-set incsearch                   " search as characters are entered
 set laststatus=2                " always show statusline
 set lazyredraw                  " redraw only when we need to
 set number                      " show line numbers
 set scrolloff=15                " keep 15 lines of padding when scrolling
-set ruler                       " show the line and column number
 set shiftwidth=2                " number of spaces for auto-indent
-set showcmd                     " show command in bottom bar
 set showmatch                   " highlight matching [{()}]
 set smartcase                   " case-sensitive if query has caps
 set statusline=%f\ %y\ %m\ %r\ %=%l/%L\ (%p%%)\ %c " custom status bar
@@ -32,9 +37,7 @@ set tabstop=2                   " number of spaces a tab counts for
 set undodir=~/.vim/undodir      " directory for undo files
 set undofile                    " maintain undo history between sessions
 set ttimeoutlen=50              " faster key sequence timeout
-set wildmenu                    " visual autocomplete for command menu
 set termguicolors               " enable true colors support
-set regexpengine=0              " Use automatic regexpengine
 
 " Map Opt+Backspace (Alt+BS) to delete previous word in Insert/Command mode
 inoremap <M-BS> <C-w>
@@ -244,11 +247,9 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-if has("autocmd")
-    augroup CleanExtraSpacesGroup
-        autocmd!
-        autocmd BufWritePre *.go,*.py,*.js,*.ts,*.php,*.rs,*.txt :call CleanExtraSpaces()
-    augroup END
-endif
+augroup CleanExtraSpacesGroup
+    autocmd!
+    autocmd BufWritePre *.go,*.py,*.js,*.ts,*.php,*.rs,*.txt :call CleanExtraSpaces()
+augroup END
 
 
