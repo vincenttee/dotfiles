@@ -38,6 +38,7 @@ set undodir=~/.vim/undodir      " directory for undo files
 set undofile                    " maintain undo history between sessions
 set ttimeoutlen=50              " faster key sequence timeout
 set termguicolors               " enable true colors support
+set regexpengine=0              " automatic engine; this build defaults to 1 (slow backtracking)
 
 " Map Opt+Backspace (Alt+BS) to delete previous word in Insert/Command mode
 inoremap <M-BS> <C-w>
