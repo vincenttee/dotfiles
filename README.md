@@ -7,6 +7,7 @@ My personal collection of configuration files for macOS.
 - **Vim (`vimrc`)**: Persistent undo, fzf fuzzy finding, and line manipulation.
 - **Zsh (`zshrc`, `zshenv`)**: Shell aliases and environment settings.
 - **Ripgrep (`ripgreprc`)**: Search defaults and exclusions.
+- **Fzf (`fzfrc`)**: Default fzf options.
 - **Git (`gitconfig`)**: Global defaults and exclusions.
 - **Tmux (`tmux.conf`)**: Terminal multiplexing.
 - **Homebrew (`Brewfile`)**: macOS apps and CLI tools.
@@ -29,9 +30,11 @@ If you don't have Homebrew installed, [install it first](https://brew.sh/).
 brew bundle --file=Brewfile
 ```
 
-### 3. Setup Symbolic Links
+The Brewfile includes Homebrew `ruby`, which `tmux-fzf-complete` requires (the system Ruby is too old). It is keg-only, so `zshenv` puts it on `PATH`.
 
-Run these commands from within the cloned repository directory to link the configuration files to your home directory:
+### 3. Setup Symbolic Links & Scripts
+
+Run these commands from within the cloned repository directory to link the configuration files to your home directory and fetch the external scripts:
 
 ```bash
 # Vim
@@ -49,9 +52,20 @@ ln -sf $(pwd)/zshenv ~/.zshenv
 # Ripgrep
 ln -sf $(pwd)/ripgreprc ~/.ripgreprc
 
+# Fzf (re-run the curl to update fzf-git.sh)
+ln -sf $(pwd)/fzfrc ~/.fzfrc
+curl -fsSL https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh -o ~/fzf-git.sh
+
 # Git
 ln -sf $(pwd)/gitconfig ~/.gitconfig
 
 # Tmux
 ln -sf $(pwd)/tmux.conf ~/.tmux.conf
+
+# Install TPM (Tmux Plugin Manager)
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
+
+### 4. Install Tmux Plugins
+
+Start tmux and press `prefix + I` (`Ctrl-a`, then `Shift-i`) to install the plugins, including `tmux-fzf-complete`.

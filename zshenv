@@ -16,6 +16,7 @@ if [[ -n "$HOMEBREW_PREFIX" ]]; then
   export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
   export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
   path=(
+    $HOMEBREW_PREFIX/opt/ruby/bin
     $HOMEBREW_PREFIX/bin
     $HOMEBREW_PREFIX/sbin
     $path
@@ -65,12 +66,7 @@ export BAT_THEME="gruvbox-dark"
 # FZF Configuration
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS='--height 40% --border
---color=fg:#e5dbc4,bg:-1,hl:#d69e49
---color=fg+:#b8af9a,bg+:#262626,hl+:#f0a327
---color=info:#b5a172,prompt:#ffa727,pointer:#ffa727
---color=marker:#cc4b5f,spinner:#d18822,header:#cc4b5f'
-export FZF_CTRL_R_OPTS="--tiebreak=index"
+[[ -f "$HOME/.fzfrc" ]] && export FZF_DEFAULT_OPTS_FILE="$HOME/.fzfrc"
 
 # History File (Zsh specific)
 export HISTFILE=~/.zsh_history

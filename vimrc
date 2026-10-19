@@ -85,7 +85,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'ghifarit53/tokyonight-vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug (empty($HOMEBREW_PREFIX) ? '/opt/homebrew' : $HOMEBREW_PREFIX) . '/opt/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'morhetz/gruvbox'
@@ -139,8 +139,13 @@ augroup GoMappings
 augroup END
 
 " FZF Layout: Adaptive & Large Preview
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
-let g:fzf_preview_window = ['right:65%,border-left', 'ctrl-/']
+if !empty($TMUX)
+  let g:fzf_layout = { 'tmux': '90%,80%' }
+else
+  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+endif
+let g:fzf_vim = {}
+let g:fzf_vim.preview_window = ['right:65%,border-left', 'ctrl-/']
 
 " Optimized 'Files' command with smart sorting
 command! -bang -nargs=? -complete=dir Files
