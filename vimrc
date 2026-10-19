@@ -138,12 +138,8 @@ augroup GoMappings
   autocmd FileType go nmap <leader>a <Plug>(go-alternate)
 augroup END
 
-" FZF Layout: Adaptive & Large Preview
-if !empty($TMUX)
-  let g:fzf_layout = { 'tmux': '90%,80%' }
-else
-  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
-endif
+" FZF Layout: Vim-native floating window & Large Preview
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 let g:fzf_vim = {}
 let g:fzf_vim.preview_window = ['right:65%,border-left', 'ctrl-/']
 
