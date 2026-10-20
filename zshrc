@@ -1,7 +1,7 @@
 # =============================================================================
-# Benchmarking (Enable this to profile startup)
+# Benchmarking (Set ZSH_PROFILE=1 to profile startup)
 # =============================================================================
-# zmodload zsh/zprof
+[[ -n $ZSH_PROFILE ]] && zmodload zsh/zprof
 
 # =============================================================================
 # Environment
@@ -19,7 +19,6 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
-setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
 # =============================================================================
@@ -42,7 +41,6 @@ alias ls="ls -G"
 alias lsp="ls -lhtF"
 alias python="python3"
 alias pip="pip3"
-alias cht.sh=~/bin/cht.sh
 
 # Usage: dedupeFile <input> <output>
 dedupeFile() {
@@ -61,13 +59,18 @@ zstyle ':completion:*' matcher-list 'm:{a-z1-9}={A-Z1-9}' # case-insensitive com
 zstyle ':completion:*' menu select                        # arrow keys to select from menu
 zstyle ':completion:*:default' list-colors ''             # use terminal colors in menu
 
-# Optimized compinit (only runs full check if cache is > 24h old)
+# Optimized compinit (full check only if dump is > 24h old)
+# Array because glob qualifiers don't expand in [[ ]]; touch restarts the 24h window.
 autoload -Uz compinit
-if [[ -n "${ZDOTDIR:-$HOME}/.zcompdump"(N.m-1) ]]; then
+_zcompdump=${ZDOTDIR:-$HOME}/.zcompdump
+_zcompdump_fresh=( $_zcompdump(N.m-1) )
+if (( $#_zcompdump_fresh )); then
   compinit -C
 else
   compinit
+  [[ -f $_zcompdump ]] && touch -- $_zcompdump
 fi
+unset _zcompdump _zcompdump_fresh
 
 # Bash-style completion support (required for terraform)
 if (( $+commands[terraform] )); then
@@ -134,11 +137,11 @@ unfunction _cached_init
 # Live Interactive Search (ripgrep + fzf)
 fif() {
   if ! type rg &>/dev/null; then
-    echo "fif: 'rg' (ripgrep) not found."
+    echo "fif: 'rg' (ripgrep) not found." >&2
     return 1
   fi
   if ! type fzf &>/dev/null; then
-    echo "fif: 'fzf' not found."
+    echo "fif: 'fzf' not found." >&2
     return 1
   fi
 
@@ -183,32 +186,34 @@ bindkey '^F' fif-widget
 # Prompt & Git
 # =============================================================================
 # Optimized Git Prompt (Single-call Porcelain Status)
-_update_git_prompt() {
+# Pure formatter; test/zshrc_git_prompt.zsh extracts it between the markers.
+# >>> git-prompt-format
+# Usage: _git_prompt_format <git status --branch --porcelain=v1 output>
+_git_prompt_format() {
   GIT_PS1=""
-  # Single git call for all status info (branch, upstream, staged, dirty, untracked)
-  local status_out
-  status_out=$(git status --branch --porcelain=v1 --untracked-files=normal 2>/dev/null)
 
   # Exit if not in a git repo
-  if [[ -z "$status_out" ]]; then
+  if [[ -z "$1" ]]; then
     return
   fi
 
   local -a lines
-  lines=(${(f)status_out})
+  lines=(${(f)1})
 
   # Parse Branch and Upstream from the first line (e.g., ## master...origin/master [ahead 1])
   local line1=$lines[1]
-  local branch_tmp=${line1#\#\# }
-  local branch=${branch_tmp%%...*}
+  local branch=${line1#\#\# }
+  branch=${branch#No commits yet on }
+  branch=${branch%%...*}
 
   local markers=""
-  # Upstream status
+  # Upstream status: match only the bracketed part (branch names may contain these words)
   if [[ "$line1" == *'['* ]]; then
-    [[ "$line1" == *"ahead"* ]] && markers+=">"
-    [[ "$line1" == *"behind"* ]] && markers+="<"
+    local upstream=${line1#*\[}
+    [[ "$upstream" == *"ahead"* ]] && markers+=">"
+    [[ "$upstream" == *"behind"* ]] && markers+="<"
     [[ "$markers" == "><" ]] && markers="<>"
-    [[ "$line1" == *"gone"* ]] && markers+="!"
+    [[ "$upstream" == *"gone"* ]] && markers+="!"
   elif [[ "$line1" == *"..."* ]]; then
     markers+="="
   fi
@@ -225,21 +230,31 @@ _update_git_prompt() {
     (( ${#body[(r)\?\?*]} )) && markers+="?"
   fi
 
-  # Format output
+  # Escape % so the prompt doesn't expand it
+  branch=${branch//\%/%%}
   if [[ -n "$markers" ]]; then
     GIT_PS1=" [$branch $markers]"
   else
     GIT_PS1=" [$branch]"
   fi
 }
+# <<< git-prompt-format
+
+_update_git_prompt() {
+  # Single git call for all status info (branch, upstream, staged, dirty, untracked)
+  # GIT_OPTIONAL_LOCKS=0: avoid index.lock contention with concurrent git commands
+  local status_out
+  status_out=$(GIT_OPTIONAL_LOCKS=0 git status --branch --porcelain=v1 --untracked-files=normal 2>/dev/null)
+  _git_prompt_format "$status_out"
+}
 
 # Apply Prompt
 typeset -gU precmd_functions
 precmd_functions+=(_update_git_prompt)
 
-export PS1='%c${GIT_PS1} $ '
+PS1='%c${GIT_PS1} $ '
 
-# Final profiler check (uncomment zmodload at top to use)
-if command -v zprof >/dev/null; then
+# Print profile (see top)
+if [[ -n $ZSH_PROFILE ]]; then
   zprof
 fi
