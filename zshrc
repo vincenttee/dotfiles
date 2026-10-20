@@ -144,7 +144,8 @@ fif() {
     return 1
   fi
 
-  local RG_PREFIX="rg --column --line-number --no-heading --color=always"
+  # Tab separator, not ':', so paths containing ':' split correctly.
+  local RG_PREFIX="rg --column --line-number --no-heading --color=always --field-match-separator '\\t'"
   local preview_cmd='cat {1}'
 
   if (( $+commands[bat] )); then
@@ -159,7 +160,7 @@ fif() {
     --bind "start:reload:$RG_PREFIX -- {q} || true" \
     --bind "change:reload:$RG_PREFIX -- {q} || true" \
     --bind "enter:become(${EDITOR:-vim} {1} +{2})" \
-    --delimiter : \
+    --delimiter '\t' \
     --preview "$preview_cmd" \
     --preview-window 'right:60%,border-left,+{2}-5' \
     --prompt 'Search Content: ' \
