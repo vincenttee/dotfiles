@@ -1,13 +1,9 @@
+# Interactive shell setup. Environment and PATH live in .zshenv.
+
 # =============================================================================
 # Benchmarking (Set ZSH_PROFILE=1 to profile startup)
 # =============================================================================
 [[ -n $ZSH_PROFILE ]] && zmodload zsh/zprof
-
-# =============================================================================
-# Environment
-# =============================================================================
-# Most environment and path configuration is in .zshenv for better performance
-# and to ensure availability in non-interactive shells.
 
 # =============================================================================
 # Options & History
@@ -91,16 +87,16 @@ fi
 # Integrations & Hooks
 # =============================================================================
 
-# Direnv (Static Hook)
+# Direnv (Static Hook); -U keeps hooks unique when this file is re-sourced
+typeset -gU precmd_functions chpwd_functions
 if (( $+commands[direnv] )); then
   _direnv_hook() {
     trap -- '' SIGINT
-    eval "$("direnv" export zsh)"
+    eval "$(direnv export zsh)"
     trap - SIGINT
   }
-  typeset -ag precmd_functions chpwd_functions
-  [[ -z "${precmd_functions[(r)_direnv_hook]}" ]] && precmd_functions+=( _direnv_hook )
-  [[ -z "${chpwd_functions[(r)_direnv_hook]}" ]] && chpwd_functions+=( _direnv_hook )
+  precmd_functions+=(_direnv_hook)
+  chpwd_functions+=(_direnv_hook)
 fi
 
 # Cached init scripts (avoid running the binary on every startup)
@@ -114,7 +110,6 @@ _cached_init() {
   local -a bin_mtime cache_mtime
   shift 2
   (( $+commands[$cmd] )) || return
-  [[ -d "${cache:h}" ]] || mkdir -p "${cache:h}"
   # zstat -A stores into arrays, avoiding a fork per $(...) on startup.
   if [[ ! -s "$cache" ]] ||
      ! zstat -L -A bin_mtime +mtime -- "$commands[$cmd]" ||
@@ -123,6 +118,7 @@ _cached_init() {
     # Write via a temp file so a concurrently starting shell never sources a
     # partial cache; on failure the previous cache (if any) is kept.
     local tmp="$cache.$$"
+    mkdir -p "${cache:h}"
     if "$@" >| "$tmp" 2>/dev/null && [[ -s "$tmp" ]]; then
       mv -f "$tmp" "$cache"
     else
@@ -139,20 +135,19 @@ unfunction _cached_init
 
 # Live Interactive Search (ripgrep + fzf)
 fif() {
-  if ! type rg &>/dev/null; then
+  if ! (( $+commands[rg] )); then
     echo "fif: 'rg' (ripgrep) not found." >&2
     return 1
   fi
-  if ! type fzf &>/dev/null; then
+  if ! (( $+commands[fzf] )); then
     echo "fif: 'fzf' not found." >&2
     return 1
   fi
 
   local RG_PREFIX="rg --column --line-number --no-heading --color=always"
-  local INITIAL_QUERY="${*:-}"
   local preview_cmd='cat {1}'
 
-  if type bat &>/dev/null; then
+  if (( $+commands[bat] )); then
     preview_cmd='bat --paging=never --color=always --style=numbers {1} --highlight-line {2}'
   fi
 
@@ -160,7 +155,7 @@ fif() {
   # editor's after a selection and non-zero on cancel: the last command's
   # status is returned as-is for the Ctrl+F widget.
   fzf --ansi \
-    --disabled --query "$INITIAL_QUERY" \
+    --disabled --query "$*" \
     --bind "start:reload:$RG_PREFIX -- {q} || true" \
     --bind "change:reload:$RG_PREFIX -- {q} || true" \
     --bind "enter:become(${EDITOR:-vim} {1} +{2})" \
@@ -174,16 +169,14 @@ fif() {
 # Zsh Line Editor (ZLE) Widget for Ctrl+F
 fif-widget() {
   zle -I
-  if fif "$BUFFER"; then
-    BUFFER=""
-  fi
+  fif "$BUFFER" && BUFFER=""
   zle -R
 }
 zle -N fif-widget
 bindkey '^F' fif-widget
 
 # fzf-git.sh (https://github.com/junegunn/fzf-git.sh)
-[ -f ~/fzf-git.sh ] && source ~/fzf-git.sh
+[[ -f ~/fzf-git.sh ]] && source ~/fzf-git.sh
 
 # =============================================================================
 # Prompt & Git
@@ -196,9 +189,7 @@ _git_prompt_format() {
   GIT_PS1=""
 
   # Exit if not in a git repo
-  if [[ -z "$1" ]]; then
-    return
-  fi
+  [[ -z $1 ]] && return
 
   local -a lines
   lines=(${(f)1})
@@ -213,46 +204,36 @@ _git_prompt_format() {
   # Upstream status: match only the bracketed part (branch names may contain these words)
   if [[ "$line1" == *'['* ]]; then
     local upstream=${line1#*\[}
-    [[ "$upstream" == *"ahead"* ]] && markers+=">"
     [[ "$upstream" == *"behind"* ]] && markers+="<"
-    [[ "$markers" == "><" ]] && markers="<>"
+    [[ "$upstream" == *"ahead"* ]] && markers+=">"
     [[ "$upstream" == *"gone"* ]] && markers+="!"
   elif [[ "$line1" == *"..."* ]]; then
     markers+="="
   fi
 
   # Working tree status (lines 2 and beyond)
-  if (( ${#lines} > 1 )); then
-    local -a body
-    body=("${(@)lines[2,-1]}")
-    # Staged: First column is not space or ?
-    (( ${#body[(r)[^ ?]*]} )) && markers+="+"
-    # Dirty: Second column is not space or ?
-    (( ${#body[(r)?[^ ?]*]} )) && markers+="*"
-    # Untracked: Starts with ??
-    (( ${#body[(r)\?\?*]} )) && markers+="?"
-  fi
+  local -a body
+  body=("${(@)lines[2,-1]}")
+  # Staged: First column is not space or ?
+  (( ${#body[(r)[^ ?]*]} )) && markers+="+"
+  # Dirty: Second column is not space or ?
+  (( ${#body[(r)?[^ ?]*]} )) && markers+="*"
+  # Untracked: Starts with ??
+  (( ${#body[(r)\?\?*]} )) && markers+="?"
 
   # Escape % so the prompt doesn't expand it
   branch=${branch//\%/%%}
-  if [[ -n "$markers" ]]; then
-    GIT_PS1=" [$branch $markers]"
-  else
-    GIT_PS1=" [$branch]"
-  fi
+  GIT_PS1=" [$branch${markers:+ $markers}]"
 }
 # <<< git-prompt-format
 
 _update_git_prompt() {
   # Single git call for all status info (branch, upstream, staged, dirty, untracked)
   # GIT_OPTIONAL_LOCKS=0: avoid index.lock contention with concurrent git commands
-  local status_out
-  status_out=$(GIT_OPTIONAL_LOCKS=0 git status --branch --porcelain=v1 --untracked-files=normal 2>/dev/null)
-  _git_prompt_format "$status_out"
+  _git_prompt_format "$(GIT_OPTIONAL_LOCKS=0 git status --branch --porcelain=v1 --untracked-files=normal 2>/dev/null)"
 }
 
 # Apply Prompt
-typeset -gU precmd_functions
 precmd_functions+=(_update_git_prompt)
 
 PS1='%c${GIT_PS1} $ '

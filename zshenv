@@ -1,5 +1,5 @@
 # Development
-[ -f ~/.developmentrc ] && . ~/.developmentrc
+[[ -f ~/.developmentrc ]] && . ~/.developmentrc
 
 # Zsh Path Optimization (Ensures unique entries)
 typeset -U path fpath manpath infopath
@@ -16,18 +16,9 @@ fi
 
 if [[ -n "$HOMEBREW_PREFIX" ]]; then
   export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-  manpath=(
-    $HOMEBREW_PREFIX/share/man
-    $manpath
-  )
-  infopath=(
-    $HOMEBREW_PREFIX/share/info
-    $infopath
-  )
-  fpath=(
-    $HOMEBREW_PREFIX/share/zsh/site-functions
-    $fpath
-  )
+  manpath=($HOMEBREW_PREFIX/share/man $manpath)
+  infopath=($HOMEBREW_PREFIX/share/info $infopath)
+  fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 fi
 
 # Global Environment
@@ -56,7 +47,7 @@ _dotfiles_path() {
 _dotfiles_path
 
 # Ripgrep Configuration
-[[ -f "$HOME/.ripgreprc" ]] && export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+[[ -f $HOME/.ripgreprc ]] && export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 
 # Bat Configuration
 export BAT_THEME="gruvbox-dark"
@@ -64,4 +55,4 @@ export BAT_THEME="gruvbox-dark"
 # FZF Configuration
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-[[ -f "$HOME/.fzfrc" ]] && export FZF_DEFAULT_OPTS_FILE="$HOME/.fzfrc"
+[[ -f $HOME/.fzfrc ]] && export FZF_DEFAULT_OPTS_FILE=$HOME/.fzfrc
