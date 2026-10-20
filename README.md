@@ -5,7 +5,7 @@ My personal collection of configuration files for macOS.
 ## Included Configurations
 
 - **Vim (`vimrc`)**: Persistent undo, fzf fuzzy finding, and line manipulation.
-- **Zsh (`zshrc`, `zshenv`)**: Shell aliases and environment settings.
+- **Zsh (`zshrc`, `zshenv`)**: Shell aliases and environment settings (`zprofile` restores the `PATH` order in login shells).
 - **Ripgrep (`ripgreprc`)**: Search defaults and exclusions.
 - **Fzf (`fzfrc`)**: Default fzf options.
 - **Git (`gitconfig`)**: Global defaults and exclusions.
@@ -48,6 +48,7 @@ vim +PlugInstall +qall
 # Zsh
 ln -sf $(pwd)/zshrc ~/.zshrc
 ln -sf $(pwd)/zshenv ~/.zshenv
+ln -sf $(pwd)/zprofile ~/.zprofile  # re-applies PATH order after macOS path_helper
 
 # Ripgrep
 ln -sf $(pwd)/ripgreprc ~/.ripgreprc

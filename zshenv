@@ -8,19 +8,14 @@ typeset -U path fpath manpath infopath
 # Hardcoded for speed (avoids calling 'brew shellenv' which is slow)
 if [[ -d /opt/homebrew ]]; then
   export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
 elif [[ -d /usr/local/Homebrew ]]; then
   export HOMEBREW_PREFIX="/usr/local"
+  export HOMEBREW_REPOSITORY="/usr/local/Homebrew"
 fi
 
 if [[ -n "$HOMEBREW_PREFIX" ]]; then
   export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-  export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
-  path=(
-    $HOMEBREW_PREFIX/opt/ruby/bin
-    $HOMEBREW_PREFIX/bin
-    $HOMEBREW_PREFIX/sbin
-    $path
-  )
   manpath=(
     $HOMEBREW_PREFIX/share/man
     $manpath
@@ -39,23 +34,26 @@ fi
 export EDITOR=vim
 export GIT_EDITOR=vim
 export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
 export PAGER="less -x4"
-
-# Path Configuration
-path=(
-  $HOME/bin
-  /usr/local/bin
-  /usr/local/sbin
-  $path
-)
 
 # Go Environment
 export GOPATH=$HOME/go
-path=($GOPATH/bin $path)
 
-# Export path to subshells
-export PATH
+# Path Configuration
+# Function so ~/.zprofile can re-apply it after path_helper.
+_dotfiles_path() {
+  path=(
+    $GOPATH/bin
+    $HOME/bin
+    /usr/local/bin
+    /usr/local/sbin
+    ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/ruby/bin}
+    ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/bin}
+    ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/sbin}
+    $path
+  )
+}
+_dotfiles_path
 
 # Ripgrep Configuration
 [[ -f "$HOME/.ripgreprc" ]] && export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
@@ -67,8 +65,3 @@ export BAT_THEME="gruvbox-dark"
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [[ -f "$HOME/.fzfrc" ]] && export FZF_DEFAULT_OPTS_FILE="$HOME/.fzfrc"
-
-# History File (Zsh specific)
-export HISTFILE=~/.zsh_history
-export HISTSIZE=10000
-export SAVEHIST=10000
