@@ -9,6 +9,7 @@ My personal collection of configuration files for macOS.
 - **Ripgrep (`ripgreprc`)**: Search defaults and exclusions.
 - **Fzf (`fzfrc`)**: Default fzf options.
 - **Git (`gitconfig`)**: Global defaults and exclusions.
+- **Ghostty (`ghostty_config`)**: Terminal settings and tmux navigation keybinds.
 - **Tmux (`tmux.conf`)**: Terminal multiplexing.
 - **Homebrew (`Brewfile`)**: macOS apps and CLI tools.
 - **VS Code (`vscode/`)**: Keybindings and settings.
@@ -59,6 +60,10 @@ curl -fsSL https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh
 
 # Git
 ln -sf $(pwd)/gitconfig ~/.gitconfig
+
+# Ghostty (macOS reads this path and it overrides ~/.config/ghostty/config)
+mkdir -p ~/Library/Application\ Support/com.mitchellh.ghostty
+ln -sf $(pwd)/ghostty_config ~/Library/Application\ Support/com.mitchellh.ghostty/config
 
 # Tmux
 ln -sf $(pwd)/tmux.conf ~/.tmux.conf
