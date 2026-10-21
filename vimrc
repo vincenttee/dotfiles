@@ -255,3 +255,10 @@ augroup CleanExtraSpacesGroup
 augroup END
 
 
+" defaults.vim's last-position jump runs before filetype detection (plug#end
+" re-registers filetypedetect), so its gitcommit guard never matches. Reset the
+" cursor on FileType, which fires after the jump.
+augroup GitCommitCursor
+  autocmd!
+  autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
+augroup END
