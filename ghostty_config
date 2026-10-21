@@ -10,6 +10,13 @@ keybind = cmd+shift+]=text:\x01\x0e
 keybind = cmd+shift+h=text:\x01\x10
 keybind = cmd+shift+l=text:\x01\x0e
 
+# Opt+Shift+h/l and [/] -> tmux session prev/next (prefix + ( / ))
+# Sent directly so it doesn't depend on tmux extended-keys parsing
+keybind = alt+shift+h=text:\x01(
+keybind = alt+shift+l=text:\x01)
+keybind = alt+shift+[=text:\x01(
+keybind = alt+shift+]=text:\x01)
+
 # Fix Cmd+Left/Right to jump cursor to start/end of line
 # Use Home/End escape sequences to avoid conflict with Tmux prefix (Ctrl-a)
 keybind = cmd+left=text:\x1bOH
