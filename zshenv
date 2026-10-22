@@ -39,6 +39,7 @@ _dotfiles_path() {
     /usr/local/bin
     /usr/local/sbin
     ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/ruby/bin}
+    ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/mysql-client/bin}
     ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/bin}
     ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/sbin}
     $path

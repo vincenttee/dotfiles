@@ -40,6 +40,8 @@ for mode in -c -lc; do
   if [[ -n $prefix ]]; then
     ruby=$(index_of $prefix/opt/ruby/bin $entries)
     (( ruby > 0 && ruby < system )) || fail "$label: $prefix/opt/ruby/bin must precede /usr/bin"
+    mysql=$(index_of $prefix/opt/mysql-client/bin $entries)
+    (( mysql > 0 && mysql < system )) || fail "$label: $prefix/opt/mysql-client/bin must precede /usr/bin"
   fi
 
   dupes=$(print -l $entries | sort | uniq -d)

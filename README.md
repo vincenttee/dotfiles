@@ -33,6 +33,8 @@ brew bundle --file=Brewfile
 
 The Brewfile includes Homebrew `ruby`, which `tmux-fzf-complete` requires (the system Ruby is too old). It is keg-only, so `zshenv` puts it on `PATH`.
 
+`mysql-client` is also keg-only (Homebrew does not link `mysql` into `bin`), so `zshenv` puts `$HOMEBREW_PREFIX/opt/mysql-client/bin` on `PATH`; setup shells out to `mysql`. It is a different tool from `mycli`.
+
 ### 3. Setup Symbolic Links & Scripts
 
 Run these commands from within the cloned repository directory to link the configuration files to your home directory and fetch the external scripts:

@@ -25,6 +25,7 @@ brew "mkcert"
 brew "mtr"
 brew "nginx", restart_service: true
 brew "nmap"
+brew "mysql-client"
 brew "node"
 brew "noti"
 brew "nvm"
