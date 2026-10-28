@@ -41,15 +41,6 @@ alias lsp="ls -lhtF"
 alias python="python3"
 alias pip="pip3"
 
-# Usage: dedupeFile <input> <output>
-dedupeFile() {
-  if [[ $# -lt 2 ]]; then
-    echo "Usage: dedupeFile <input> <output>"
-    return 1
-  fi
-  awk '!visited[$0]++' "$1" > "$2"
-}
-
 # =============================================================================
 # Completions
 # =============================================================================
