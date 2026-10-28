@@ -1,79 +1,106 @@
-# Vincent's Dotfiles
+# Dotfiles
 
-My personal collection of configuration files for macOS.
+Personal macOS configuration files for Zsh, Vim, Tmux, Ghostty, Git, and CLI tooling.
 
-## Included Configurations
+## Contents
 
-- **Vim (`vimrc`)**: Persistent undo, fzf fuzzy finding, and line manipulation.
-- **Zsh (`zshrc`, `zshenv`)**: Shell aliases and environment settings (`zprofile` restores the `PATH` order in login shells).
-- **Ripgrep (`ripgreprc`)**: Search defaults and exclusions.
-- **Fzf (`fzfrc`)**: Default fzf options.
-- **Git (`gitconfig`)**: Global defaults and exclusions.
-- **Ghostty (`ghostty_config`)**: Terminal settings and tmux navigation keybinds.
-- **Tmux (`tmux.conf`)**: Terminal multiplexing.
-- **Homebrew (`Brewfile`)**: macOS apps and CLI tools.
-- **VS Code (`vscode/`)**: Keybindings and settings.
+| File             | Description                                                                 |
+| :--------------- | :-------------------------------------------------------------------------- |
+| `zshenv`         | Environment variables, Homebrew setup, and `PATH` construction              |
+| `zprofile`       | Restores `zshenv` `PATH` order after macOS `/etc/zprofile` (`path_helper`)  |
+| `zshrc`          | Interactive shell options, cached tool completions, prompt, and helpers     |
+| `developmentrc`  | Template for local/secret environment variables, sourced by `zshenv`        |
+| `vimrc`          | Vim 9.1+ config with `vim-plug`, `fzf.vim`, `vim-go` (`gopls`), and Gruvbox |
+| `tmux.conf`      | `Ctrl-a` prefix, vi mode, Gruvbox status bar, and TPM plugins               |
+| `ghostty_config` | Ghostty theme and keybinds forwarded to Tmux                                |
+| `gitconfig`      | Git defaults, `delta` pager, GPG signing, and aliases                       |
+| `fzfrc`          | Default `fzf` layout and Gruvbox colors                                     |
+| `ripgreprc`      | Default `rg` arguments (smart case, hidden files, `.git` excluded)          |
+| `Brewfile`       | Homebrew formulae and casks                                                 |
 
-## Installation
+Also included, not installed by the setup below:
 
-### 1. Clone the Repository
+- [`VIM.md`](VIM.md): Vim keybinding cheat sheet.
+- `vscode/`: backup of VS Code `settings.json` and `keybindings.json`.
+- `iterm2_profile/default.itermcolors`: legacy iTerm2 color preset (import via iTerm2 → Settings → Profiles → Colors).
+- `vimium-options.json`: Vimium browser extension settings (import via Vimium options page).
+
+## Setup
+
+### 1. Clone and install packages
+
+Install [Homebrew](https://brew.sh/), then clone the repository and install the bundle:
 
 ```bash
 git clone https://github.com/vincenttee/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-```
-
-### 2. Install Dependencies (Homebrew)
-
-If you don't have Homebrew installed, [install it first](https://brew.sh/).
-
-```bash
 brew bundle --file=Brewfile
 ```
 
-The Brewfile includes Homebrew `ruby`, which `tmux-fzf-complete` requires (the system Ruby is too old). It is keg-only, so `zshenv` puts it on `PATH`.
+> Note: `ruby` (needed by `tmux-fzf-complete`) and `mysql-client` are keg-only in Homebrew. `zshenv` prepends their `opt/<pkg>/bin` directories to `PATH` automatically.
 
-`mysql-client` is also keg-only (Homebrew does not link `mysql` into `bin`), so `zshenv` puts `$HOMEBREW_PREFIX/opt/mysql-client/bin` on `PATH`; setup shells out to `mysql`. It is a different tool from `mycli`.
+### 2. Symlink configuration files
 
-### 3. Setup Symbolic Links & Scripts
-
-Run these commands from within the cloned repository directory to link the configuration files to your home directory and fetch the external scripts:
+Run from the repository root:
 
 ```bash
-# Vim
-ln -sf $(pwd)/vimrc ~/.vimrc
-mkdir -p ~/.vim/undodir
+# Zsh
+ln -sf "$PWD/zshenv" ~/.zshenv
+ln -sf "$PWD/zprofile" ~/.zprofile
+ln -sf "$PWD/zshrc" ~/.zshrc
 
-# Install vim-plug and plugins
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# Vim, Tmux, Fzf, Ripgrep
+ln -sf "$PWD/vimrc" ~/.vimrc
+ln -sf "$PWD/tmux.conf" ~/.tmux.conf
+ln -sf "$PWD/fzfrc" ~/.fzfrc
+ln -sf "$PWD/ripgreprc" ~/.ripgreprc
+
+# Ghostty (overrides ~/.config/ghostty/config on macOS)
+mkdir -p "$HOME/Library/Application Support/com.mitchellh.ghostty"
+ln -sf "$PWD/ghostty_config" "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+```
+
+### 3. Install plugins and external scripts
+
+```bash
+# Vim undo directory and vim-plug
+mkdir -p ~/.vim/undodir
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 vim +PlugInstall +qall
 
-# Zsh
-ln -sf $(pwd)/zshrc ~/.zshrc
-ln -sf $(pwd)/zshenv ~/.zshenv
-ln -sf $(pwd)/zprofile ~/.zprofile  # re-applies PATH order after macOS path_helper
-
-# Ripgrep
-ln -sf $(pwd)/ripgreprc ~/.ripgreprc
-
-# Fzf (re-run the curl to update fzf-git.sh)
-ln -sf $(pwd)/fzfrc ~/.fzfrc
+# fzf-git.sh
 curl -fsSL https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh -o ~/fzf-git.sh
 
-# Git
-ln -sf $(pwd)/gitconfig ~/.gitconfig
-
-# Ghostty (macOS reads this path and it overrides ~/.config/ghostty/config)
-mkdir -p ~/Library/Application\ Support/com.mitchellh.ghostty
-ln -sf $(pwd)/ghostty_config ~/Library/Application\ Support/com.mitchellh.ghostty/config
-
-# Tmux
-ln -sf $(pwd)/tmux.conf ~/.tmux.conf
-
-# Install TPM (Tmux Plugin Manager)
+# Tmux Plugin Manager (TPM)
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-### 4. Install Tmux Plugins
+Inside a running `tmux` session, press `Ctrl-a` then `Shift-i` to install Tmux plugins.
 
-Start tmux and press `prefix + I` (`Ctrl-a`, then `Shift-i`) to install the plugins, including `tmux-fzf-complete`.
+### 4. Local configuration
+
+These files hold personal values, so copy them instead of symlinking to keep secrets and identity out of the repository:
+
+```bash
+cp "$PWD/gitconfig" ~/.gitconfig
+cp "$PWD/developmentrc" ~/.developmentrc
+```
+
+- `~/.gitconfig`: replace `YOUR_NAME`, `YOUR_EMAIL`, `YOUR_GPG_KEY_ID`, and the `includeIf` work paths. `core.excludesfile` points to `~/.gitignore_global`, which is not part of this repository; create it yourself.
+- `~/.developmentrc`: fill in `AWS_*`, `GOPRIVATE`, `WEATHER_LOCATION`, etc.
+
+## Highlights
+
+- **Fast shell startup**: `zshenv` hardcodes Homebrew paths instead of calling `brew shellenv`. `zshrc` caches `fzf`, `zoxide`, and `npm` init scripts in `~/.cache` (regenerated when the binary changes) and runs a full `compinit` check at most once per 24 hours. Run `ZSH_PROFILE=1 zsh -i -c exit` to profile startup with `zprof`.
+- **Live content search (`fif` / `Ctrl-f`)**: `rg` results in `fzf` with a `bat` preview; `Enter` opens the match at its line in `$EDITOR`.
+- **Ghostty → Tmux navigation**: `Cmd-Shift-[`/`]` (or `h`/`l`) switches Tmux windows; `Opt-Shift-[`/`]` (or `h`/`l`) switches sessions.
+
+## Tests
+
+Run the Zsh test suite to verify `PATH` precedence (both login and non-login shells) and Git prompt parsing:
+
+```bash
+zsh test/zshenv_path.zsh
+zsh test/zshrc_git_prompt.zsh
+```
