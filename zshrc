@@ -1,13 +1,9 @@
 # Interactive shell setup. Environment and PATH live in .zshenv.
 
-# =============================================================================
-# Benchmarking (Set ZSH_PROFILE=1 to profile startup)
-# =============================================================================
+# Profiling: ZSH_PROFILE=1 zsh -i
 [[ -n $ZSH_PROFILE ]] && zmodload zsh/zprof
 
-# =============================================================================
-# Options & History
-# =============================================================================
+# --- Options and history ---
 export HISTFILE=~/.zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -20,37 +16,41 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt SHARE_HISTORY
 
-# =============================================================================
-# Key Bindings (Terminal / Ghostty)
-# =============================================================================
+# --- Key bindings ---
 bindkey "\e[1;3D" backward-word     # ⌥←
 bindkey "\e[1;3C" forward-word      # ⌥→
 bindkey "^[[1;9D" beginning-of-line # cmd+←
 bindkey "^[[1;9C" end-of-line       # cmd+→
-
-# Opt+Backspace to delete previous word
-bindkey "\e\x7f" backward-kill-word
+bindkey "\e\x7f" backward-kill-word # ⌥⌫
 bindkey "\e^H" backward-kill-word
 
-# =============================================================================
-# Aliases & Functions
-# =============================================================================
+# --- Aliases ---
 alias gs="git status"
+alias gc="git commit -v"
+alias ga="git add ."
+alias gd="git diff"
+alias gl="git log"
+alias gw="git wip"
+alias guw="git unwip"
+
 alias ls="ls -G"
+alias ll="ls -lhF"
 alias lsp="ls -lhtF"
+
+alias ws="cd ~/workspace"
+
 alias python="python3"
 alias pip="pip3"
 
-# =============================================================================
-# Completions
-# =============================================================================
-# Tab Completion Enhancements
-zstyle ':completion:*' matcher-list 'm:{a-z1-9}={A-Z1-9}' # case-insensitive completion
-zstyle ':completion:*' menu select                        # arrow keys to select from menu
-zstyle ':completion:*:default' list-colors ''             # use terminal colors in menu
+# GPG pinentry needs the controlling terminal of each interactive shell
+export GPG_TTY=$TTY
 
-# Optimized compinit (full check only if dump is > 24h old)
-# Array because glob qualifiers don't expand in [[ ]]; touch restarts the 24h window.
+# --- Completion ---
+zstyle ':completion:*' matcher-list 'm:{a-z1-9}={A-Z1-9}' # case-insensitive
+zstyle ':completion:*' menu select
+zstyle ':completion:*:default' list-colors ''             # terminal colors
+
+# Full compinit only if the dump is >24h old (glob qualifiers need array context; touch resets the window).
 autoload -Uz compinit
 _zcompdump=${ZDOTDIR:-$HOME}/.zcompdump
 _zcompdump_fresh=( $_zcompdump(N.m-1) )
@@ -62,9 +62,8 @@ else
 fi
 unset _zcompdump _zcompdump_fresh
 
-# Bash-style completion support (required for terraform)
+# Terraform ships bash-style completion; load it lazily on first Tab.
 if (( $+commands[terraform] )); then
-  # Lazy-load completion on first Tab press to speed up shell startup
   _terraform_lazy_complete() {
     compdef -d terraform
     autoload -Uz bashcompinit && bashcompinit
@@ -74,11 +73,8 @@ if (( $+commands[terraform] )); then
   compdef _terraform_lazy_complete terraform
 fi
 
-# =============================================================================
-# Integrations & Hooks
-# =============================================================================
-
-# Direnv (Static Hook); -U keeps hooks unique when this file is re-sourced
+# --- Hooks ---
+# -U keeps hooks unique when this file is re-sourced
 typeset -gU precmd_functions chpwd_functions
 if (( $+commands[direnv] )); then
   _direnv_hook() {
@@ -90,24 +86,20 @@ if (( $+commands[direnv] )); then
   chpwd_functions+=(_direnv_hook)
 fi
 
-# Cached init scripts (avoid running the binary on every startup)
-# Usage: _cached_init <command> <cache-name> <generator command...>
-# Regenerates the cache when it is missing, empty, or older than the binary.
-# The binary's own mtime is checked without following symlinks: Homebrew
-# bottles keep their build time, but the bin/ symlink is recreated on upgrade.
+# --- Tool init ---
+# zstat -L: Homebrew bottles keep their build time, but the bin/ symlink is recreated on upgrade.
 zmodload -F zsh/stat b:zstat
 _cached_init() {
   local cmd=$1 cache="${ZSH_CACHE_DIR:-$HOME/.cache}/zsh_$2"
   local -a bin_mtime cache_mtime
   shift 2
   (( $+commands[$cmd] )) || return
-  # zstat -A stores into arrays, avoiding a fork per $(...) on startup.
+  # zstat -A avoids a fork per $(...) on startup.
   if [[ ! -s "$cache" ]] ||
      ! zstat -L -A bin_mtime +mtime -- "$commands[$cmd]" ||
      ! zstat -A cache_mtime +mtime -- "$cache" ||
      (( bin_mtime[1] > cache_mtime[1] )); then
-    # Write via a temp file so a concurrently starting shell never sources a
-    # partial cache; on failure the previous cache (if any) is kept.
+    # Temp file so a concurrent shell never sources a partial cache.
     local tmp="$cache.$$"
     mkdir -p "${cache:h}"
     if "$@" >| "$tmp" 2>/dev/null && [[ -s "$tmp" ]]; then
@@ -119,12 +111,13 @@ _cached_init() {
   [[ -s "$cache" ]] && source "$cache"
 }
 
-_cached_init npm npm_completion npm completion # NPM completion
-_cached_init fzf fzf fzf --zsh                 # FZF (key bindings & completion)
-_cached_init zoxide zoxide zoxide init zsh     # Zoxide (smart directory jumper)
+_cached_init npm npm_completion npm completion
+_cached_init fzf fzf fzf --zsh
+_cached_init zoxide zoxide zoxide init zsh
 unfunction _cached_init
 
-# Live Interactive Search (ripgrep + fzf)
+# --- Search ---
+# Live search: ripgrep reloads on every keystroke, Enter opens the match.
 fif() {
   if ! (( $+commands[rg] )); then
     echo "fif: 'rg' (ripgrep) not found." >&2
@@ -143,9 +136,7 @@ fif() {
     preview_cmd='bat --paging=never --color=always --style=numbers {1} --highlight-line {2}'
   fi
 
-  # Enter replaces fzf with the editor (become), so fzf's exit status is the
-  # editor's after a selection and non-zero on cancel: the last command's
-  # status is returned as-is for the Ctrl+F widget.
+  # become() makes fzf exit with the editor's status (non-zero on cancel); the Ctrl+F widget relies on it.
   fzf --ansi \
     --disabled --query "$*" \
     --bind "start:reload:$RG_PREFIX -- {q} || true" \
@@ -158,7 +149,6 @@ fif() {
     --header "Press Enter to open in ${EDITOR:-vim} | ESC to cancel"
 }
 
-# Zsh Line Editor (ZLE) Widget for Ctrl+F
 fif-widget() {
   zle -I
   fif "$BUFFER" && BUFFER=""
@@ -167,33 +157,27 @@ fif-widget() {
 zle -N fif-widget
 bindkey '^F' fif-widget
 
-# fzf-git.sh (https://github.com/junegunn/fzf-git.sh)
-[[ -f ~/fzf-git.sh ]] && source ~/fzf-git.sh
+[[ -f ~/fzf-git.sh ]] && source ~/fzf-git.sh # https://github.com/junegunn/fzf-git.sh
 
-# =============================================================================
-# Prompt & Git
-# =============================================================================
-# Optimized Git Prompt (Single-call Porcelain Status)
+# --- Prompt ---
 # Pure formatter; test/zshrc_git_prompt.zsh extracts it between the markers.
 # >>> git-prompt-format
-# Usage: _git_prompt_format <git status --branch --porcelain=v1 output>
+# Sets GIT_PS1 from `git status --branch --porcelain=v1` output.
 _git_prompt_format() {
   GIT_PS1=""
-
-  # Exit if not in a git repo
   [[ -z $1 ]] && return
 
   local -a lines
   lines=(${(f)1})
 
-  # Parse Branch and Upstream from the first line (e.g., ## master...origin/master [ahead 1])
+  # First line, e.g. "## master...origin/master [ahead 1]"
   local line1=$lines[1]
   local branch=${line1#\#\# }
   branch=${branch#No commits yet on }
   branch=${branch%%...*}
 
   local markers=""
-  # Upstream status: match only the bracketed part (branch names may contain these words)
+  # Match only the bracketed part (branch names may contain these words)
   if [[ "$line1" == *'['* ]]; then
     local upstream=${line1#*\[}
     [[ "$upstream" == *"behind"* ]] && markers+="<"
@@ -203,34 +187,27 @@ _git_prompt_format() {
     markers+="="
   fi
 
-  # Working tree status (lines 2 and beyond)
   local -a body
   body=("${(@)lines[2,-1]}")
-  # Staged: First column is not space or ?
-  (( ${#body[(r)[^ ?]*]} )) && markers+="+"
-  # Dirty: Second column is not space or ?
-  (( ${#body[(r)?[^ ?]*]} )) && markers+="*"
-  # Untracked: Starts with ??
-  (( ${#body[(r)\?\?*]} )) && markers+="?"
+  (( ${#body[(r)[^ ?]*]} )) && markers+="+"   # staged: first column not space or ?
+  (( ${#body[(r)?[^ ?]*]} )) && markers+="*"  # dirty: second column not space or ?
+  (( ${#body[(r)\?\?*]} )) && markers+="?"    # untracked
 
-  # Escape % so the prompt doesn't expand it
-  branch=${branch//\%/%%}
+  branch=${branch//\%/%%} # stop prompt expansion of %
   GIT_PS1=" [$branch${markers:+ $markers}]"
 }
 # <<< git-prompt-format
 
 _update_git_prompt() {
-  # Single git call for all status info (branch, upstream, staged, dirty, untracked)
-  # GIT_OPTIONAL_LOCKS=0: avoid index.lock contention with concurrent git commands
+  # GIT_OPTIONAL_LOCKS=0 avoids index.lock contention with concurrent git commands.
   _git_prompt_format "$(GIT_OPTIONAL_LOCKS=0 git status --branch --porcelain=v1 --untracked-files=normal 2>/dev/null)"
 }
-
-# Apply Prompt
 precmd_functions+=(_update_git_prompt)
 
 PS1='%c${GIT_PS1} $ '
 
-# Print profile (see top)
-if [[ -n $ZSH_PROFILE ]]; then
-  zprof
-fi
+# --- Local overrides (sourced last) ---
+[[ -f ~/.workrc ]] && source ~/.workrc
+[[ -f ~/.pirc ]] && source ~/.pirc
+
+[[ -n $ZSH_PROFILE ]] && zprof
