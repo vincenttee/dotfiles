@@ -30,9 +30,11 @@ for mode in -c -lc; do
   label="zsh $mode"
   system=$(index_of /usr/bin $entries)
 
-  for want in $home/go/bin $home/bin; do
+  for want in $home/scripts/bin $home/.bun/bin $home/go/bin $home/bin; do
     (( $(index_of $want $entries) < system )) || fail "$label: $want must precede /usr/bin"
   done
+
+  (( $(index_of $home/.local/bin $entries) > system )) || fail "$label: $home/.local/bin must follow /usr/bin"
 
   prefix=
   [[ -d /opt/homebrew ]] && prefix=/opt/homebrew

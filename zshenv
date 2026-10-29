@@ -34,6 +34,8 @@ export GOPATH=$HOME/go
 # Function so ~/.zprofile can re-apply it after path_helper.
 _dotfiles_path() {
   path=(
+    $HOME/scripts/bin
+    $HOME/.bun/bin
     $GOPATH/bin
     $HOME/bin
     /usr/local/bin
@@ -43,6 +45,7 @@ _dotfiles_path() {
     ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/bin}
     ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/sbin}
     $path
+    $HOME/.local/bin
   )
 }
 _dotfiles_path
