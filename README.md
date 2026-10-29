@@ -9,11 +9,10 @@ Personal macOS configuration files for Zsh, Vim, Tmux, Ghostty, Git, and CLI too
 | `zshenv`         | Environment variables, Homebrew setup, and `PATH` construction              |
 | `zprofile`       | Restores `zshenv` `PATH` order after macOS `/etc/zprofile` (`path_helper`)  |
 | `zshrc`          | Interactive shell options, cached tool completions, prompt, and helpers     |
-| `developmentrc`  | Template for local/secret environment variables, sourced by `zshenv`        |
 | `vimrc`          | Vim 9.1+ config with `vim-plug`, `fzf.vim`, `vim-go` (`gopls`), and Gruvbox |
 | `tmux.conf`      | `Ctrl-a` prefix, vi mode, Gruvbox status bar, and TPM plugins               |
 | `ghostty_config` | Ghostty theme and keybinds forwarded to Tmux                                |
-| `gitconfig`      | Git defaults, `delta` pager, GPG signing, and aliases                       |
+| `gitconfig`      | Git defaults, `delta` pager, and aliases (identity stays local)             |
 | `fzfrc`          | Default `fzf` layout and Gruvbox colors                                     |
 | `ripgreprc`      | Default `rg` arguments (smart case, hidden files, `.git` excluded)          |
 | `Brewfile`       | Homebrew formulae and casks                                                 |
@@ -60,6 +59,25 @@ mkdir -p "$HOME/Library/Application Support/com.mitchellh.ghostty"
 ln -sf "$PWD/ghostty_config" "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ```
 
+**Git** is included rather than symlinked to keep identity local. Put this in `~/.gitconfig`:
+
+```ini
+[include]
+    path = ~/PATH/TO/dotfiles/gitconfig
+
+[user]
+    name = YOUR_NAME
+    email = YOUR_EMAIL
+    signingkey = YOUR_GPG_KEY_ID
+
+[commit]
+    gpgsign = true
+
+# Work overrides (keep last)
+[includeIf "gitdir:~/PATH/TO/WORK/REPOS/"]
+    path = ~/PATH/TO/WORK/.gitconfig
+```
+
 ### 3. Install plugins and external scripts
 
 ```bash
@@ -80,15 +98,8 @@ Inside a running `tmux` session, press `Ctrl-a` then `Shift-i` to install Tmux p
 
 ### 4. Local configuration
 
-These files hold personal values, so copy them instead of symlinking to keep secrets and identity out of the repository:
-
-```bash
-cp "$PWD/gitconfig" ~/.gitconfig
-cp "$PWD/developmentrc" ~/.developmentrc
-```
-
-- `~/.gitconfig`: replace `YOUR_NAME`, `YOUR_EMAIL`, `YOUR_GPG_KEY_ID`, and the `includeIf` work paths. `core.excludesfile` points to `~/.gitignore_global`, which is not part of this repository; create it yourself.
-- `~/.developmentrc`: fill in `AWS_*`, `GOPRIVATE`, `WEATHER_LOCATION`, etc.
+- `~/.gitignore_global`: referenced by `gitconfig` (`core.excludesfile`); create if needed for global ignores.
+- `~/.workrc`, `~/.pirc`: optional work and Pi config, kept outside this repo.
 
 ## Highlights
 

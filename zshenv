@@ -1,6 +1,3 @@
-# Development
-[[ -f ~/.developmentrc ]] && . ~/.developmentrc
-
 # Zsh Path Optimization (Ensures unique entries)
 typeset -U path fpath manpath infopath
 
@@ -26,6 +23,9 @@ export EDITOR=vim
 export GIT_EDITOR=vim
 export LANG=en_US.UTF-8
 export PAGER="less -x4"
+
+# Docker
+export DOCKER_DEFAULT_PLATFORM=linux/arm64
 
 # Go Environment
 export GOPATH=$HOME/go
