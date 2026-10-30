@@ -1,5 +1,8 @@
 theme = Gruvbox Material Dark
 
+# Increase line spacing
+adjust-cell-height = 20%
+
 # Enable Option key as Alt/Meta for Vim/Tmux
 macos-option-as-alt = true
 
