@@ -27,12 +27,15 @@ bindkey "\e^H" backward-kill-word
 # --- Aliases ---
 alias gs="git status"
 alias gc="git commit -v"
+alias gca="git amend"
+alias gcan="git amend-noedit"
 alias ga="git add ."
 alias gd="git diff"
 alias gds="git diff --staged"
 alias gl="git log"
 alias gw="git wip"
 alias guw="git unwip"
+alias guc="git uncommit"
 
 alias ls="ls -G"
 alias ll="ls -lhF"
