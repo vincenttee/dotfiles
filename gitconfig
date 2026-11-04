@@ -43,6 +43,7 @@
     amend-noedit = commit --amend --no-edit
     wip          = !git add -A && git commit --no-verify -m WIP
     unwip        = !git log -1 --format=%s | grep -qx WIP && git reset HEAD^ || echo 'last commit is not WIP'
+    uncommit     = reset HEAD^
     extract      = !git reset -p HEAD^ && git commit --amend --no-edit
 
     unstage   = restore --staged
